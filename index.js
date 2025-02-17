@@ -1,7 +1,8 @@
 const express = require("express");
 require("dotenv").config();
 const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./swagger/swagger-output.json");
+const swaggerDocument = require("./swagger-output.json");
+const cors = require("cors");
 
 const app = express(); // Đảm bảo khai báo app trước khi sử dụng
 
@@ -9,7 +10,9 @@ const app = express(); // Đảm bảo khai báo app trước khi sử dụng
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json());
-const port = process.env.PORT || 3000; // Đảm bảo có cổng mặc định nếu không có trong `.env`
+const port = process.env.PORT
+
+app.use(cors());
 
 // Kết nối database
 const database = require("./config/database");

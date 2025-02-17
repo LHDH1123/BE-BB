@@ -1,294 +1,120 @@
 const Brand = require("../../models/brand.model");
 
-/**
- * @swagger
- * /brands/:
- *   get:
- *     tags:
- *       - Brands
- *     summary: Retrieve a list of brands
- *     responses:
- *       200:
- *         description: A list of brands
- */
 module.exports.index = async (req, res) => {
   try {
-    const brand = await Brand.find({});
-    res.json(brand);
+    const brands = await Brand.find({ deleted: false });
+    res.status(200).json(brands);
   } catch (error) {
-    console.error(error);
-    res.json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-/**
- * @swagger
- * /brands/create:
- *   post:
- *     tags:
- *       - Brands
- *     summary: Create a new brand
- *     parameters:
- *       - in: body
- *         name: brand
- *         description: Brand object to be created
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             name:
- *               type: string
- *               example: "Brand Name"
- *             status:
- *               type: boolean
- *               example: true
- *             thumbnail:
- *               type: string
- *               example: "image_url"
- *     responses:
- *       200:
- *         description: Brand created successfully
- */
 module.exports.createPost = async (req, res) => {
   try {
-    const { name, status, thumbnail } = req.body;
+    let { name, status, thumbnail } = req.body;
 
-    const brand = new Brand({
-      name,
-      status,
-      thumbnail,
-    });
+    if (!name) {
+      return res.status(400).json({ error: "Name is required" });
+    }
+
+    // Đảm bảo status có giá trị mặc định nếu không gửi từ client
+    status = status ?? true;
+
+    const brand = new Brand({ name, status, thumbnail });
     await brand.save();
 
-    res.json(brand);
+    res.status(201).json(brand);
   } catch (error) {
     console.error(error);
-    res.json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-/**
- * @swagger
- * /brands/delete/{id}:
- *   delete:
- *     tags:
- *       - Brands
- *     summary: Soft delete a brand by updating its status
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         type: string
- *     responses:
- *       200:
- *         description: Brand deleted successfully
- */
 module.exports.deleteBrand = async (req, res) => {
   try {
     const id = req.params.id;
 
-    await Brand.updateOne(
-      {
-        _id: id,
-      },
-      { status: false }
-    );
+    await Brand.updateOne({ _id: id }, { deleted: true });
 
-    const brand = await Brand.find({ status: true });
-
-    res.json(brand);
+    const brands = await Brand.find({ deleted: false });
+    res.status(200).json(brands);
   } catch (error) {
-    console.error(error);
-    res.json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-/**
- * @swagger
- * /brands/edit/{id}:
- *   patch:
- *     tags:
- *       - Brands
- *     summary: Update a brand by ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         type: string
- *       - in: body
- *         name: brand
- *         description: Brand object to be updated
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             name:
- *               type: string
- *               example: "Updated Brand"
- *             status:
- *               type: boolean
- *               example: true
- *             thumbnail:
- *               type: string
- *               example: "new_image_url"
- *     responses:
- *       200:
- *         description: Brand updated successfully
- */
 module.exports.editPatch = async (req, res) => {
   try {
     const id = req.params.id;
-
     const { name, status, thumbnail } = req.body;
 
-    await Brand.updateOne(
-      {
-        _id: id,
-      },
-      { name, status, thumbnail }
-    );
+    if (!name || !status) {
+      return res.status(400).json({ error: "Name and status are required" });
+    }
 
-    const brand = await Brand.find({ _id: id });
+    await Brand.updateOne({ _id: id }, { name, status, thumbnail });
 
-    res.json(brand);
+    const brand = await Brand.findById(id);
+    res.status(200).json(brand);
   } catch (error) {
-    console.error(error);
-    res.json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-/**
- * @swagger
- * /brands/change-status/{id}:
- *   patch:
- *     tags:
- *       - Brands
- *     summary: Change the status of a brand by ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         type: string
- *       - in: body
- *         name: status
- *         description: Status to be updated
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             status:
- *               type: boolean
- *               example: true
- *     responses:
- *       200:
- *         description: Brand status updated successfully
- */
 module.exports.changeStatus = async (req, res) => {
   try {
     const id = req.params.id;
-    const status = req.body.status;
+    const status = req.params.status;
 
     await Brand.updateOne(
-      {
-        _id: id,
-      },
-      { status: status }
+      { _id: id },
+      { status: status, $push: { updatedBy: { updatedAt: new Date() } } }
     );
 
-    const brand = await Brand.find({ _id: id });
-
-    res.json(brand);
+    const brand = await Brand.findById(id);
+    res.status(200).json(brand);
   } catch (error) {
-    console.error(error);
-    res.json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-/**
- * @swagger
- * /brands/change-multi:
- *   patch:
- *     tags:
- *       - Brands
- *     summary: Change status or delete multiple brands
- *     parameters:
- *       - in: body
- *         name: multiChange
- *         description: Parameters for batch update or delete
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             ids:
- *               type: array
- *               items:
- *                 type: string
- *               example: ["brand_id_1", "brand_id_2"]
- *             key:
- *               type: string
- *               example: "STATUS"
- *             value:
- *               type: boolean
- *               example: false
- *     responses:
- *       200:
- *         description: Multiple brands updated successfully
- */
 module.exports.changeMultiPatch = async (req, res) => {
   try {
-    const key = {
-      STATUS: "status",
-      DELETE: "delete",
-    };
+    console.log("Dữ liệu nhận từ frontend:", req.body);
+    const { ids, key, value } = req.body;
 
-    const ids = req.body.ids;
-    const Key = req.body.key;
-    const value = req.body.value;
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: "Ids are required" });
+    }
 
-    console.log(ids);
+    // const keyMap = {
+    //   STATUS: "status",
+    //   DELETE: "deleted",
+    // };
 
-    switch (Key) {
-      case key.STATUS:
+    // if (!Object.keys(keyMap).includes(key)) {
+    //   return res.status(400).json({ error: "Invalid key provided" });
+    // }
+
+    switch (key) {
+      case "status":
         await Brand.updateMany(
-          {
-            _id: { $in: ids },
-          },
-          {
-            $set: { status: value },
-          }
+          { _id: { $in: ids } },
+          { $set: { status: value } }
         );
+        return res.status(200).json({ message: "Status updated successfully" });
 
-        res.json({
-          code: 200,
-          message: "Cập nhật trạng thái thành công!",
-        });
-        break;
-
-      case key.DELETE:
+      case "deleted":
         await Brand.updateMany(
-          {
-            _id: { $in: ids },
-          },
-          {
-            $set: { deleted: true },
-          }
+          { _id: { $in: ids } },
+          { $set: { deleted: true } }
         );
-
-        res.json({
-          code: 200,
-          message: "Xóa thành công!",
-        });
-        break;
+        return res.status(200).json({ message: "Deleted successfully" });
 
       default:
-        res.json({
-          code: 400,
-          message: "Không tồn tại key hợp lệ!",
-        });
-        break;
+        return res.status(400).json({ error: "Invalid key provided" });
     }
   } catch (error) {
-    console.error(error);
-    res.json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

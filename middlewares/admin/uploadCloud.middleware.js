@@ -7,30 +7,30 @@ cloudinary.config({
   api_secret: process.env.CLOUD_SECRET,
 });
 
-module.exports.upload = (req, res, next) => {
-    if (req.file) {
-      let streamUpload = (req) => {
-        return new Promise((resolve, reject) => {
-          let stream = cloudinary.uploader.upload_stream((error, result) => {
-            if (result) {
-              resolve(result);
-            } else {
-              reject(error);
-            }
-          });
+module.exports.upload = async (req, res, next) => {
+  if (!req.file) return next(); // Nếu không có file, tiếp tục request
 
-          streamifier.createReadStream(req.file.buffer).pipe(stream);
+  try {
+    const streamUpload = (req) => {
+      return new Promise((resolve, reject) => {
+        let stream = cloudinary.uploader.upload_stream((error, result) => {
+          if (result) {
+            resolve(result);
+          } else {
+            reject(error);
+          }
         });
-      };
+        streamifier.createReadStream(req.file.buffer).pipe(stream);
+      });
+    };
 
-      async function upload(req) {
-        let result = await streamUpload(req);
-        req.body[req.file.fieldname] = result.secure_url; //req.file.fieldname = thumbnail là key name trong giao diện create.pug
-        next();
-      }
+    const result = await streamUpload(req);
+    req.body.thumbnail = result.url; // Lưu link ảnh vào req.body
+    console.log(result.url);
 
-      upload(req);
-    } else {
-      next();
-    }
+    next(); // Tiếp tục middleware tiếp theo
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Lỗi khi upload ảnh" });
   }
+};

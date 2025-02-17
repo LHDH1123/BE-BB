@@ -5,15 +5,12 @@ mongoose.plugin(slug);
 const categorySchema = new mongoose.Schema(
   {
     title: String,
-    brand_id: String,
     parent_id: {
       type: String,
       default: "",
     },
-    description: String,
     thumbnail: String,
     status: String,
-    position: Number,
     slug: {
       type: String,
       slug: "title",

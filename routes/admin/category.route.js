@@ -5,13 +5,23 @@ const uploadCloudinary = require("../../middlewares/admin/uploadCloud.middleware
 const upload = multer();
 const controller = require("../../controllers/admin/category.controller");
 
-/**
- * @swagger
- * /adminbb/categorys:
- *   get:
- *     tags:
- *       - Categories
- */
 router.get("/", controller.index);
+
+router.get("/:id", controller.getCategory);
+
+router.post(
+  "/create",
+  upload.single("thumbnail"),
+  uploadCloudinary.upload,
+  controller.createPost
+);
+
+router.patch("/edit/:id", controller.edit);
+
+router.patch("/change-status/:id/:status", controller.changeStatus);
+
+router.patch("/change-multi", controller.changeMultiPatch);
+
+router.delete("/delete/:id", controller.deleteCategory);
 
 module.exports = router;
