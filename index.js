@@ -10,9 +10,11 @@ const app = express(); // Đảm bảo khai báo app trước khi sử dụng
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json());
-const port = process.env.PORT
+const port = process.env.PORT;
 
 app.use(cors());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 // Kết nối database
 const database = require("./config/database");

@@ -2,14 +2,12 @@
   "swagger": "2.0",
   "info": {
     "title": "My API",
-    "description": "API documentation for managing brands and categories",
+    "description": "API documentation",
     "version": "1.0.0"
   },
   "host": "localhost:3010",
   "basePath": "/",
-  "schemes": [
-    "http"
-  ],
+  "schemes": ["http"],
   "paths": {
     "/brands/": {
       "get": {
@@ -25,6 +23,29 @@
         }
       }
     },
+    "/brands/{id}": {
+      "get": {
+        "tags": ["Brands"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+
     "/brands/create": {
       "post": {
         "tags": ["Brands"],
@@ -195,9 +216,9 @@
         }
       }
     },
-    "/categories/": {
+    "/categorys/": {
       "get": {
-        "tags": ["Categories"],
+        "tags": ["Categorys"],
         "description": "",
         "responses": {
           "200": {
@@ -209,9 +230,9 @@
         }
       }
     },
-    "/categories/{id}": {
+    "/categorys/{id}": {
       "get": {
-        "tags": ["Categories"],
+        "tags": ["Categorys"],
         "description": "",
         "parameters": [
           {
@@ -231,9 +252,9 @@
         }
       }
     },
-    "/categories/create": {
+    "/categorys/create": {
       "post": {
-        "tags": ["Categories"],
+        "tags": ["Categorys"],
         "description": "",
         "parameters": [
           {
@@ -248,7 +269,7 @@
                 "parent_id": {
                   "example": "any"
                 },
-                "thumbnail": {
+                "status": {
                   "example": "any"
                 }
               }
@@ -265,9 +286,9 @@
         }
       }
     },
-    "/categories/edit/{id}": {
+    "/categorys/edit/{id}": {
       "patch": {
-        "tags": ["Categories"],
+        "tags": ["Categorys"],
         "description": "",
         "parameters": [
           {
@@ -288,7 +309,7 @@
                 "parent_id": {
                   "example": "any"
                 },
-                "thumbnail": {
+                "status": {
                   "example": "any"
                 }
               }
@@ -305,9 +326,9 @@
         }
       }
     },
-    "/categories/change-status/{id}/{status}": {
+    "/categorys/change-status/{id}/{status}": {
       "patch": {
-        "tags": ["Categories"],
+        "tags": ["Categorys"],
         "description": "",
         "parameters": [
           {
@@ -333,9 +354,9 @@
         }
       }
     },
-    "/categories/change-multi": {
+    "/categorys/change-multi": {
       "patch": {
-        "tags": ["Categories"],
+        "tags": ["Categorys"],
         "description": "",
         "parameters": [
           {
@@ -364,9 +385,9 @@
         }
       }
     },
-    "/categories/delete/{id}": {
+    "/categorys/delete/{id}": {
       "delete": {
-        "tags": ["Categories"],
+        "tags": ["Categorys"],
         "description": "",
         "parameters": [
           {
@@ -449,6 +470,9 @@
                   "example": "any"
                 },
                 "title": {
+                  "example": "any"
+                },
+                "SKU": {
                   "example": "any"
                 },
                 "category_id": {

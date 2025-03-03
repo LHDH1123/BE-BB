@@ -9,6 +9,17 @@ module.exports.index = async (req, res) => {
   }
 };
 
+module.exports.getBrand = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const brand = await Brand.findOne({ _id: id, deleted: false });
+
+    res.status(200).json(brand);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports.createPost = async (req, res) => {
   try {
     let { name, status, thumbnail } = req.body;
@@ -48,7 +59,7 @@ module.exports.editPatch = async (req, res) => {
     const id = req.params.id;
     const { name, status, thumbnail } = req.body;
 
-    if (!name || !status) {
+    if (name === "") {
       return res.status(400).json({ error: "Name and status are required" });
     }
 

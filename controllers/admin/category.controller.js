@@ -26,8 +26,8 @@ module.exports.getCategory = async (req, res) => {
 
 module.exports.createPost = async (req, res) => {
   try {
-    const { title, parent_id, thumbnail } = req.body;
-    const category = new Category({ title, parent_id, thumbnail });
+    const { title, parent_id, status } = req.body;
+    const category = new Category({ title, parent_id, status });
     await category.save();
     res.json(category);
   } catch (error) {
@@ -51,8 +51,8 @@ module.exports.deleteCategory = async (req, res) => {
 module.exports.edit = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, parent_id, thumbnail } = req.body;
-    await Category.updateOne({ _id: id }, { title, parent_id, thumbnail });
+    const { title, parent_id, status } = req.body;
+    await Category.updateOne({ _id: id }, { title, parent_id, status });
     const category = await Category.findById(id);
     res.json(category);
   } catch (error) {
@@ -64,7 +64,7 @@ module.exports.edit = async (req, res) => {
 module.exports.changeStatus = async (req, res) => {
   try {
     const { id, status } = req.params;
-    await Category.updateOne({ _id: id }, { deleted: status });
+    await Category.updateOne({ _id: id }, { status: status });
     const category = await Category.findById(id);
     res.json(category);
   } catch (error) {

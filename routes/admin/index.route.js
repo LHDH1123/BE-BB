@@ -7,7 +7,7 @@ const accountRoutes = require("./account.route");
 module.exports = (app) => {
   app.use("/brands", brandRoutes);
 
-  app.use("/categories", categoryRoutes);
+  app.use("/categorys", categoryRoutes);
 
   app.use("/products", productRoutes);
 

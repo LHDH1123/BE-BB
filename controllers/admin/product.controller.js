@@ -29,6 +29,8 @@ module.exports.getProduct = async (req, res) => {
 
 module.exports.createPost = async (req, res) => {
   try {
+    console.log("📩 Dữ liệu nhận từ frontend:", req.body); // Debug dữ liệu gửi lên
+
     const price = parseInt(req.body.price);
     const discountPercentage = parseInt(req.body.discountPercentage);
     const stock = parseInt(req.body.stock);
@@ -41,17 +43,29 @@ module.exports.createPost = async (req, res) => {
       position = parseInt(req.body.position);
     }
 
-    const { title, category_id, brand_id, thumbnail, status, description } =
-      req.body;
+    const { title, SKU, category_id, brand_id, status, description } = req.body;
+
+    // **Kiểm tra dữ liệu thumbnail**
+    if (
+      !Array.isArray(req.body.thumbnail) ||
+      req.body.thumbnail.some(
+        (t) => typeof t !== "string" || !t.startsWith("http")
+      )
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Ảnh không hợp lệ. Vui lòng thử lại!" });
+    }
 
     const product = new Product({
       title,
+      SKU,
       category_id,
       brand_id,
       price,
       discountPercentage,
       stock,
-      thumbnail,
+      thumbnail: req.body.thumbnail, // **Lưu danh sách URL hợp lệ**
       status,
       position,
       description,
@@ -61,7 +75,7 @@ module.exports.createPost = async (req, res) => {
 
     res.status(201).json(product);
   } catch (error) {
-    console.error(error);
+    console.error("❌ Lỗi khi tạo sản phẩm:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

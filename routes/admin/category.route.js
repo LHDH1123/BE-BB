@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const uploadCloudinary = require("../../middlewares/admin/uploadCloud.middleware");
-const upload = multer();
+const upload = multer({
+  limits: { fileSize: 50 * 1024 * 1024 }, // Giới hạn 50MB
+});
 const controller = require("../../controllers/admin/category.controller");
 
 router.get("/", controller.index);

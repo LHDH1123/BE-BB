@@ -4,7 +4,9 @@ const controller = require("../../controllers/admin/account.controller");
 const uploadCloudinary = require("../../middlewares/admin/uploadCloud.middleware");
 const validate = require("../../validates/admin/account.validates");
 const multer = require("multer");
-const upload = multer();
+const upload = multer({
+  limits: { fileSize: 50 * 1024 * 1024 }, // Giới hạn 50MB
+});
 
 router.get("/", controller.index);
 

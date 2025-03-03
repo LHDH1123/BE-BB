@@ -11,9 +11,13 @@ const productSchema = new mongoose.Schema(
     price: Number,
     discountPercentage: Number,
     stock: Number,
-    thumbnail: String,
-    status: String,
+    thumbnail: {
+      type: [String], // Mảng chứa đường dẫn hình ảnh
+      default: [],
+    },
+    status: Boolean,
     position: Number,
+    SKU: String,
     slug: {
       type: String,
       slug: "title",
