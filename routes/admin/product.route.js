@@ -13,7 +13,7 @@ router.get("/:id", controller.getProduct);
 
 router.post(
   "/create",
-  upload.array("thumbnail", 10),
+  upload.any("thumbnail", 10),
   uploadCloudinary.upload,
   controller.createPost
 );
@@ -22,7 +22,12 @@ router.patch("/change-status/:id/:status", controller.changeStatus);
 
 router.patch("/change-multi", controller.changeMultiPatch);
 
-router.patch("/edit/:id", controller.editPatch);
+router.patch(
+  "/edit/:id",
+  upload.any("thumbnail", 10),
+  uploadCloudinary.upload,
+  controller.editPatch
+);
 
 router.delete("/delete/:id", controller.deleteProduct);
 

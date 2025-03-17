@@ -10,9 +10,9 @@ const accountSchema = new mongoose.Schema(
       default: generate.generateRandomString(20),
     },
     phone: String,
-    avatar: String,
+    thumbnail: String,
     role_id: String,
-    status: String,
+    status: Boolean,
     deleted: {
       type: Boolean,
       default: false,

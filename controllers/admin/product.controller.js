@@ -1,4 +1,7 @@
 const Product = require("../../models/product.model");
+const mongoose = require("mongoose");
+const multer = require("multer");
+const uploadCloudinary = require("../../middlewares/admin/uploadCloud.middleware");
 
 module.exports.index = async (req, res) => {
   try {
@@ -14,7 +17,7 @@ module.exports.getProduct = async (req, res) => {
   try {
     const id = req.params.id;
 
-    const product = await Product.find({ _id: id });
+    const product = await Product.find({ _id: id }, { deleted: false });
 
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
@@ -45,17 +48,17 @@ module.exports.createPost = async (req, res) => {
 
     const { title, SKU, category_id, brand_id, status, description } = req.body;
 
-    // **Kiểm tra dữ liệu thumbnail**
-    if (
-      !Array.isArray(req.body.thumbnail) ||
-      req.body.thumbnail.some(
-        (t) => typeof t !== "string" || !t.startsWith("http")
-      )
-    ) {
-      return res
-        .status(400)
-        .json({ error: "Ảnh không hợp lệ. Vui lòng thử lại!" });
-    }
+    // // **Kiểm tra dữ liệu thumbnail**
+    // if (
+    //   !Array.isArray(req.body.thumbnail) ||
+    //   req.body.thumbnail.some(
+    //     (t) => typeof t !== "string" || !t.startsWith("http")
+    //   )
+    // ) {
+    //   return res
+    //     .status(400)
+    //     .json({ error: "Ảnh không hợp lệ. Vui lòng thử lại!" });
+    // }
 
     const product = new Product({
       title,
@@ -107,12 +110,10 @@ module.exports.editPatch = async (req, res) => {
     const stock = parseInt(req.body.stock);
     const position = parseInt(req.body.position);
 
-    const { title, category_id, brand_id, thumbnail, status, description } =
+    let { title, category_id, brand_id, thumbnail, status, description } =
       req.body;
 
-    const updatedBy = [{ updatedAt: new Date() }];
-
-    const result = await Product.updateOne(
+    await Product.updateOne(
       { _id: id },
       {
         title,
@@ -125,16 +126,13 @@ module.exports.editPatch = async (req, res) => {
         status,
         position,
         description,
-        $push: { updatedBy: updatedBy },
+        updatedAt: new Date(),
       }
     );
 
-    if (result.matchedCount === 0) {
-      return res.status(404).json({ error: "Product not found" });
-    }
-
-    const product = await Product.findById(id);
-    res.status(200).json(product);
+    // Lấy lại sản phẩm sau khi cập nhật
+    const updatedProduct = await Product.findById(id);
+    res.status(200).json(updatedProduct);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

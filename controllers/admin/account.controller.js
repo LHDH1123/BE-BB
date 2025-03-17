@@ -1,6 +1,6 @@
 const Account = require("../../models/account.model");
 const Role = require("../../models/role.model");
-const systemConfig = require("../../config/system");
+const mongoose = require("mongoose");
 const md5 = require("md5");
 
 // [GET] /admin/accounts
@@ -14,7 +14,6 @@ module.exports.index = async (req, res) => {
       record.role = role;
     }
 
-    console.log(records);
     res.json(records);
   } catch (error) {
     console.error(error);
@@ -26,13 +25,14 @@ module.exports.index = async (req, res) => {
 module.exports.createPost = async (req, res) => {
   try {
     const {
-      avatar,
+      thumbnail,
       fullName,
       phone,
       email,
-      roleId,
+      role_id,
       password,
       confirmPassword,
+      status,
     } = req.body;
 
     const emailExists = await Account.findOne({ email, deleted: false });
@@ -43,16 +43,17 @@ module.exports.createPost = async (req, res) => {
     if (confirmPassword === password) {
       const hashedPassword = md5(password);
       const newAccount = new Account({
-        avatar,
+        thumbnail,
         fullName,
         phone,
         email,
-        roleId,
+        role_id,
         password: hashedPassword,
+        status,
       });
       await newAccount.save();
 
-      res.json(newAccount);
+      res.status(200).json(newAccount); // ✅ Đúng cú pháp mới
     } else {
       return res.status(400).json({ error: "Mật khẩu không khớp" });
     }
@@ -82,7 +83,7 @@ module.exports.edit = async (req, res) => {
 // [PATCH] /admin/accounts/edit/:id
 module.exports.editPatch = async (req, res) => {
   try {
-    const { avatar, fullName, phone, email, roleId, password } = req.body;
+    const { thumbnail, fullName, phone, email, roleId, status } = req.body;
     const { id } = req.params;
 
     // Kiểm tra xem email có tồn tại trên hệ thống nhưng không phải của tài khoản đang cập nhật không
@@ -99,7 +100,7 @@ module.exports.editPatch = async (req, res) => {
     // Cập nhật thông tin tài khoản
     await Account.updateOne(
       { _id: id },
-      { avatar, fullName, phone, email, roleId, password }
+      { thumbnail, fullName, phone, email, roleId, status }
     );
 
     // Lấy lại thông tin tài khoản đã cập nhật
@@ -126,6 +127,77 @@ module.exports.delete = async (req, res) => {
 
     res.json(record);
   } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports.changeStatus = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const status = req.params.status;
+
+    await Account.updateOne({ _id: id }, { status: status });
+
+    const account = await Account.find({ _id: id });
+    res.status(200).json(account);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports.changeMultiPatch = async (req, res) => {
+  try {
+    // const key = {
+    //   STATUS: "status",
+    //   DELETE: "delete",
+    // };
+
+    const ids = req.body.ids;
+    const Key = req.body.key;
+    const value = req.body.value;
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "Invalid or missing IDs", receivedIds: ids });
+    }
+
+    if (!ids.every((id) => mongoose.Types.ObjectId.isValid(id))) {
+      return res.status(400).json({ error: "Invalid ID format" });
+    }
+
+    switch (Key) {
+      case "status":
+        await Account.updateMany(
+          { _id: { $in: ids } },
+          { $set: { status: value } }
+        );
+
+        res.status(200).json({
+          message: "Status updated successfully!",
+        });
+        break;
+
+      case "delete":
+        await Account.updateMany(
+          { _id: { $in: ids } },
+          { $set: { deleted: true } }
+        );
+
+        res.status(200).json({
+          message: "Account deleted successfully!",
+        });
+        break;
+
+      default:
+        res.status(400).json({
+          error: "Invalid key provided!",
+        });
+        break;
+    }
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

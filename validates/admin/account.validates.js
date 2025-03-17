@@ -1,50 +1,40 @@
 module.exports.createPost = async (req, res, next) => {
   if (!req.body.fullName) {
-    res.json("error", `Vui lòng nhập họ tên`);
-    return;
+    return res.status(400).json({ error: "Vui lòng nhập họ tên" });
   }
   if (!req.body.phone) {
-    res.json("error", `Vui lòng nhập SĐT`);
-    return;
+    return res.status(400).json({ error: "Vui lòng nhập SĐT" });
   }
   if (!req.body.email) {
-    res.json("error", `Vui lòng nhập email`);
-    return;
+    return res.status(400).json({ error: "Vui lòng nhập email" });
   }
-  if (!req.body.roleId) {
-    res.json("error", `Vui lòng nhập vai trò`);
-    return;
+  if (!req.body.role_id) {
+    return res.status(400).json({ error: "Vui lòng chọn vai trò" });
   }
   if (!req.body.password) {
-    res.json("error", `Vui lòng nhập mật khẩu`);
-    return;
+    return res.status(400).json({ error: "Vui lòng nhập mật khẩu" });
   }
   if (!req.body.confirmPassword) {
-    res.json("error", `Vui lòng nhập lại mật khẩu`);
-    return;
+    return res.status(400).json({ error: "Vui lòng nhập lại mật khẩu" });
   }
   next();
 };
+
 module.exports.editPatch = async (req, res, next) => {
   if (!req.body.fullName) {
-    res.json("error", `Vui lòng nhập họ tên`);
-    return;
+    return res.status(400).json({ error: "Vui lòng nhập họ tên" });
   }
   if (!req.body.phone) {
-    res.json("error", `Vui lòng nhập SĐT`);
-    return;
+    return res.status(400).json({ error: "Vui lòng nhập SĐT" });
   }
   if (!req.body.email) {
-    res.json("error", `Vui lòng nhập email`);
-    return;
+    return res.status(400).json({ error: "Vui lòng nhập email" });
   }
-  if (!req.body.roleId) {
-    res.json("error", `Vui lòng nhập vai trò`);
-    return;
+  if (!req.body.role_id) {
+    return res.status(400).json({ error: "Vui lòng nhập vai trò" });
   }
   if (!req.body.password) {
-    res.json("error", `Vui lòng nhập mật khẩu`);
-    return;
+    return res.status(400).json({ error: "Vui lòng nhập mật khẩu" });
   }
   next();
 };

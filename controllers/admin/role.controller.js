@@ -25,9 +25,10 @@ module.exports.getRole = async (req, res) => {
 module.exports.createPost = async (req, res) => {
   try {
     const title = req.body.title;
-    const permissions = req.body.permissions;
+    const status = req.body.status;
 
-    const role = await Role.create({ title, permissions });
+    const role = new Role({ title, status });
+    await role.save();
 
     res.status(200).json(role);
   } catch (error) {
@@ -42,6 +43,36 @@ module.exports.editPatch = async (req, res) => {
     const permissions = req.body.permissions;
 
     await Role.updateOne({ _id: id }, { permissions: permissions });
+
+    const role = await Role.find({ _id: id });
+    res.status(200).json(role);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports.editPatchData = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { title, status } = req.body;
+
+    await Role.updateOne({ _id: id }, { title, status });
+
+    const role = await Role.find({ _id: id });
+    res.status(200).json(role);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports.changeStatus = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const status = req.params.status;
+
+    await Role.updateOne({ _id: id }, { status: status });
 
     const role = await Role.find({ _id: id });
     res.status(200).json(role);

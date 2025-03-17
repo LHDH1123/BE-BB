@@ -13,7 +13,7 @@ router.get("/:id", controller.getBrand);
 
 router.post(
   "/create",
-  upload.single("thumbnail"), // Nhận file từ form-data
+  upload.any("thumbnail"), // Nhận file từ form-data
   uploadCloudinary.upload, // Middleware upload ảnh
   controller.createPost // Xử lý tạo brand
 );
@@ -21,7 +21,12 @@ router.patch("/change-status/:id/:status", controller.changeStatus);
 
 router.patch("/change-multi", controller.changeMultiPatch);
 
-router.patch("/edit/:id", controller.editPatch);
+router.patch(
+  "/edit/:id",
+  upload.any("thumbnail"), // Nhận file từ form-data
+  uploadCloudinary.upload,
+  controller.editPatch
+);
 
 router.delete("/delete/:id", controller.deleteBrand);
 

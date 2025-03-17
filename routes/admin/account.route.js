@@ -12,7 +12,7 @@ router.get("/", controller.index);
 
 router.post(
   "/create",
-  upload.single("avatar"),
+  upload.any("thumbnail"),
   uploadCloudinary.upload,
   validate.createPost,
   controller.createPost
@@ -22,12 +22,16 @@ router.get("/:id", controller.edit);
 
 router.patch(
   "/edit/:id",
-  upload.single("avatar"),
+  upload.any("thumbnail"),
   uploadCloudinary.upload,
-  validate.editPatch,
+  // validate.editPatch,
   controller.editPatch
 );
 
 router.delete("/:id", controller.delete);
+
+router.patch("/change-status/:id/:status", controller.changeStatus);
+
+router.patch("/change-multi", controller.changeMultiPatch);
 
 module.exports = router;

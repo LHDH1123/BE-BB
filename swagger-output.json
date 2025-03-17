@@ -2,16 +2,17 @@
   "swagger": "2.0",
   "info": {
     "title": "My API",
-    "description": "API documentation",
+    "description": "API documentation for managing brands and categories",
     "version": "1.0.0"
   },
   "host": "localhost:3010",
   "basePath": "/",
-  "schemes": ["http"],
+  "schemes": [
+    "http"
+  ],
   "paths": {
     "/brands/": {
       "get": {
-        "tags": ["Brands"],
         "description": "",
         "responses": {
           "200": {
@@ -25,7 +26,6 @@
     },
     "/brands/{id}": {
       "get": {
-        "tags": ["Brands"],
         "description": "",
         "parameters": [
           {
@@ -45,10 +45,8 @@
         }
       }
     },
-
     "/brands/create": {
       "post": {
-        "tags": ["Brands"],
         "description": "",
         "parameters": [
           {
@@ -57,13 +55,13 @@
             "schema": {
               "type": "object",
               "properties": {
+                "thumbnail": {
+                  "example": "any"
+                },
                 "name": {
                   "example": "any"
                 },
                 "status": {
-                  "example": "any"
-                },
-                "thumbnail": {
                   "example": "any"
                 }
               }
@@ -85,7 +83,6 @@
     },
     "/brands/change-status/{id}/{status}": {
       "patch": {
-        "tags": ["Brands"],
         "description": "",
         "parameters": [
           {
@@ -105,9 +102,6 @@
           "200": {
             "description": "OK"
           },
-          "400": {
-            "description": "Bad Request"
-          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -116,7 +110,6 @@
     },
     "/brands/change-multi": {
       "patch": {
-        "tags": ["Brands"],
         "description": "",
         "parameters": [
           {
@@ -153,7 +146,6 @@
     },
     "/brands/edit/{id}": {
       "patch": {
-        "tags": ["Brands"],
         "description": "",
         "parameters": [
           {
@@ -168,13 +160,13 @@
             "schema": {
               "type": "object",
               "properties": {
+                "thumbnail": {
+                  "example": "any"
+                },
                 "name": {
                   "example": "any"
                 },
                 "status": {
-                  "example": "any"
-                },
-                "thumbnail": {
                   "example": "any"
                 }
               }
@@ -196,7 +188,6 @@
     },
     "/brands/delete/{id}": {
       "delete": {
-        "tags": ["Brands"],
         "description": "",
         "parameters": [
           {
@@ -218,7 +209,6 @@
     },
     "/categorys/": {
       "get": {
-        "tags": ["Categorys"],
         "description": "",
         "responses": {
           "200": {
@@ -232,7 +222,6 @@
     },
     "/categorys/{id}": {
       "get": {
-        "tags": ["Categorys"],
         "description": "",
         "parameters": [
           {
@@ -254,7 +243,6 @@
     },
     "/categorys/create": {
       "post": {
-        "tags": ["Categorys"],
         "description": "",
         "parameters": [
           {
@@ -263,6 +251,9 @@
             "schema": {
               "type": "object",
               "properties": {
+                "thumbnail": {
+                  "example": "any"
+                },
                 "title": {
                   "example": "any"
                 },
@@ -288,7 +279,6 @@
     },
     "/categorys/edit/{id}": {
       "patch": {
-        "tags": ["Categorys"],
         "description": "",
         "parameters": [
           {
@@ -328,7 +318,6 @@
     },
     "/categorys/change-status/{id}/{status}": {
       "patch": {
-        "tags": ["Categorys"],
         "description": "",
         "parameters": [
           {
@@ -356,7 +345,6 @@
     },
     "/categorys/change-multi": {
       "patch": {
-        "tags": ["Categorys"],
         "description": "",
         "parameters": [
           {
@@ -387,7 +375,6 @@
     },
     "/categorys/delete/{id}": {
       "delete": {
-        "tags": ["Categorys"],
         "description": "",
         "parameters": [
           {
@@ -409,7 +396,6 @@
     },
     "/products/": {
       "get": {
-        "tags": ["Products"],
         "description": "",
         "responses": {
           "200": {
@@ -423,7 +409,6 @@
     },
     "/products/{id}": {
       "get": {
-        "tags": ["Products"],
         "description": "",
         "parameters": [
           {
@@ -448,7 +433,6 @@
     },
     "/products/create": {
       "post": {
-        "tags": ["Products"],
         "description": "",
         "parameters": [
           {
@@ -457,6 +441,9 @@
             "schema": {
               "type": "object",
               "properties": {
+                "thumbnail": {
+                  "example": "any"
+                },
                 "price": {
                   "example": "any"
                 },
@@ -481,9 +468,6 @@
                 "brand_id": {
                   "example": "any"
                 },
-                "thumbnail": {
-                  "example": "any"
-                },
                 "status": {
                   "example": "any"
                 },
@@ -498,6 +482,9 @@
           "201": {
             "description": "Created"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -506,7 +493,6 @@
     },
     "/products/change-status/{id}/{status}": {
       "patch": {
-        "tags": ["Products"],
         "description": "",
         "parameters": [
           {
@@ -537,7 +523,6 @@
     },
     "/products/change-multi": {
       "patch": {
-        "tags": ["Products"],
         "description": "",
         "parameters": [
           {
@@ -574,7 +559,6 @@
     },
     "/products/edit/{id}": {
       "patch": {
-        "tags": ["Products"],
         "description": "",
         "parameters": [
           {
@@ -589,6 +573,9 @@
             "schema": {
               "type": "object",
               "properties": {
+                "thumbnail": {
+                  "example": "any"
+                },
                 "price": {
                   "example": "any"
                 },
@@ -610,9 +597,6 @@
                 "brand_id": {
                   "example": "any"
                 },
-                "thumbnail": {
-                  "example": "any"
-                },
                 "status": {
                   "example": "any"
                 },
@@ -627,9 +611,6 @@
           "200": {
             "description": "OK"
           },
-          "404": {
-            "description": "Not Found"
-          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -638,7 +619,6 @@
     },
     "/products/delete/{id}": {
       "delete": {
-        "tags": ["Products"],
         "description": "",
         "parameters": [
           {
@@ -663,7 +643,6 @@
     },
     "/role/": {
       "get": {
-        "tags": ["Roles"],
         "description": "",
         "responses": {
           "200": {
@@ -677,7 +656,6 @@
     },
     "/role/{id}": {
       "get": {
-        "tags": ["Roles"],
         "description": "",
         "parameters": [
           {
@@ -699,7 +677,6 @@
     },
     "/role/create": {
       "post": {
-        "tags": ["Roles"],
         "description": "",
         "parameters": [
           {
@@ -711,6 +688,39 @@
                 "title": {
                   "example": "any"
                 },
+                "status": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/role/editPermission/{id}": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
                 "permissions": {
                   "example": "any"
                 }
@@ -730,7 +740,6 @@
     },
     "/role/edit/{id}": {
       "patch": {
-        "tags": ["Roles"],
         "description": "",
         "parameters": [
           {
@@ -745,7 +754,10 @@
             "schema": {
               "type": "object",
               "properties": {
-                "permissions": {
+                "title": {
+                  "example": "any"
+                },
+                "status": {
                   "example": "any"
                 }
               }
@@ -764,7 +776,6 @@
     },
     "/role/delete/{id}": {
       "delete": {
-        "tags": ["Roles"],
         "description": "",
         "parameters": [
           {
@@ -784,9 +795,35 @@
         }
       }
     },
+    "/role/change-status/{id}/{status}": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/accounts/": {
       "get": {
-        "tags": ["Accounts"],
         "description": "",
         "responses": {
           "200": {
@@ -800,7 +837,6 @@
     },
     "/accounts/create": {
       "post": {
-        "tags": ["Accounts"],
         "description": "",
         "parameters": [
           {
@@ -809,6 +845,9 @@
             "schema": {
               "type": "object",
               "properties": {
+                "thumbnail": {
+                  "example": "any"
+                },
                 "fullName": {
                   "example": "any"
                 },
@@ -818,7 +857,7 @@
                 "email": {
                   "example": "any"
                 },
-                "roleId": {
+                "role_id": {
                   "example": "any"
                 },
                 "password": {
@@ -827,7 +866,7 @@
                 "confirmPassword": {
                   "example": "any"
                 },
-                "avatar": {
+                "status": {
                   "example": "any"
                 }
               }
@@ -849,7 +888,6 @@
     },
     "/accounts/{id}": {
       "get": {
-        "tags": ["Accounts"],
         "description": "",
         "parameters": [
           {
@@ -872,7 +910,6 @@
         }
       },
       "delete": {
-        "tags": ["Accounts"],
         "description": "",
         "parameters": [
           {
@@ -894,7 +931,6 @@
     },
     "/accounts/edit/{id}": {
       "patch": {
-        "tags": ["Accounts"],
         "description": "",
         "parameters": [
           {
@@ -909,6 +945,9 @@
             "schema": {
               "type": "object",
               "properties": {
+                "thumbnail": {
+                  "example": "any"
+                },
                 "fullName": {
                   "example": "any"
                 },
@@ -921,10 +960,459 @@
                 "roleId": {
                   "example": "any"
                 },
-                "password": {
+                "status": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/accounts/change-status/{id}/{status}": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/accounts/change-multi": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ids": {
                   "example": "any"
                 },
-                "avatar": {
+                "key": {
+                  "example": "any"
+                },
+                "value": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/stores/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/stores/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/stores/create": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "local": {
+                  "example": "any"
+                },
+                "city": {
+                  "example": "any"
+                },
+                "phone": {
+                  "example": "any"
+                },
+                "timeOpen": {
+                  "example": "any"
+                },
+                "status": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/stores/edit/{id}": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "local": {
+                  "example": "any"
+                },
+                "city": {
+                  "example": "any"
+                },
+                "phone": {
+                  "example": "any"
+                },
+                "timeOpen": {
+                  "example": "any"
+                },
+                "status": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/stores/delete/{id}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/stores/change-status/{id}/{status}": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/stores/change-multi": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ids": {
+                  "example": "any"
+                },
+                "key": {
+                  "example": "any"
+                },
+                "value": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/banner/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/banner/create": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "example": "any"
+                },
+                "linkHref": {
+                  "example": "any"
+                },
+                "thumbnail": {
+                  "example": "any"
+                },
+                "status": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/banner/edit/{id}": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "example": "any"
+                },
+                "linkHref": {
+                  "example": "any"
+                },
+                "thumbnail": {
+                  "example": "any"
+                },
+                "status": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/banner/delete/{id}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/banner/change-status/{id}/{status}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/banner/change-multi": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ids": {
+                  "example": "any"
+                },
+                "key": {
+                  "example": "any"
+                },
+                "value": {
                   "example": "any"
                 }
               }

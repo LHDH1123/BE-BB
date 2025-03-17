@@ -27,7 +27,6 @@ module.exports.createPost = async (req, res) => {
     if (!name) {
       return res.status(400).json({ error: "Name is required" });
     }
-
     // Đảm bảo status có giá trị mặc định nếu không gửi từ client
     status = status ?? true;
 
@@ -62,7 +61,7 @@ module.exports.editPatch = async (req, res) => {
     if (name === "") {
       return res.status(400).json({ error: "Name and status are required" });
     }
-
+    console.log(thumbnail);
     await Brand.updateOne({ _id: id }, { name, status, thumbnail });
 
     const brand = await Brand.findById(id);
