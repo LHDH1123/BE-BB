@@ -1,18 +1,14 @@
 const Account = require("../../models/account.model");
 const Role = require("../../models/role.model");
 const mongoose = require("mongoose");
-const md5 = require("md5");
+const bcrypt = require("bcryptjs");
 
 // [GET] /admin/accounts
 module.exports.index = async (req, res) => {
   try {
-    const find = { deleted: false };
-    const records = await Account.find(find).select("-password -token");
-
-    for (const record of records) {
-      const role = await Role.findOne({ _id: record.role_id, deleted: false });
-      record.role = role;
-    }
+    const records = await Account.find({ deleted: false })
+      .select("-password")
+      .populate("role_id", "name"); // Tự động lấy tên role
 
     res.json(records);
   } catch (error) {
@@ -35,28 +31,38 @@ module.exports.createPost = async (req, res) => {
       status,
     } = req.body;
 
-    const emailExists = await Account.findOne({ email, deleted: false });
-    if (emailExists) {
+    // Kiểm tra email tồn tại
+    if (await Account.findOne({ email, deleted: false })) {
       return res.status(400).json({ error: `Email ${email} đã tồn tại` });
     }
 
-    if (confirmPassword === password) {
-      const hashedPassword = md5(password);
-      const newAccount = new Account({
-        thumbnail,
-        fullName,
-        phone,
-        email,
-        role_id,
-        password: hashedPassword,
-        status,
-      });
-      await newAccount.save();
+    // Kiểm tra vai trò hợp lệ
+    const role = await Role.findOne({ _id: role_id, deleted: false });
+    if (!role) {
+      return res.status(400).json({ error: "Vai trò không hợp lệ" });
+    }
 
-      res.status(200).json(newAccount); // ✅ Đúng cú pháp mới
-    } else {
+    // Kiểm tra mật khẩu trùng khớp
+    if (confirmPassword !== password) {
       return res.status(400).json({ error: "Mật khẩu không khớp" });
     }
+
+    // Mã hóa mật khẩu
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Tạo tài khoản mới
+    const newAccount = new Account({
+      thumbnail,
+      fullName,
+      phone,
+      email,
+      role_id,
+      password: hashedPassword,
+      status,
+    });
+
+    await newAccount.save();
+    res.status(201).json(newAccount);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -69,7 +75,7 @@ module.exports.edit = async (req, res) => {
     const record = await Account.findOne({
       _id: req.params.id,
       deleted: false,
-    });
+    }).select("-password");
     if (!record) {
       return res.status(404).json({ error: "Account not found" });
     }
@@ -83,62 +89,59 @@ module.exports.edit = async (req, res) => {
 // [PATCH] /admin/accounts/edit/:id
 module.exports.editPatch = async (req, res) => {
   try {
-    const { thumbnail, fullName, phone, email, roleId, status } = req.body;
+    const { thumbnail, fullName, phone, email, role_id, status } = req.body;
     const { id } = req.params;
 
-    // Kiểm tra xem email có tồn tại trên hệ thống nhưng không phải của tài khoản đang cập nhật không
-    const emailExists = await Account.findOne({
-      _id: { $ne: id },
-      email,
-      deleted: false,
-    });
-
-    if (emailExists) {
+    // Kiểm tra email có tồn tại nhưng không phải của tài khoản đang cập nhật
+    if (await Account.findOne({ _id: { $ne: id }, email, deleted: false })) {
       return res.status(400).json({ error: `Email ${email} đã tồn tại` });
     }
 
+    // Kiểm tra vai trò hợp lệ
+    if (role_id && !(await Role.findOne({ _id: role_id, deleted: false }))) {
+      return res.status(400).json({ error: "Vai trò không hợp lệ" });
+    }
+
     // Cập nhật thông tin tài khoản
-    await Account.updateOne(
-      { _id: id },
-      { thumbnail, fullName, phone, email, roleId, status }
-    );
+    const updatedAccount = await Account.findByIdAndUpdate(
+      id,
+      { thumbnail, fullName, phone, email, role_id, status },
+      { new: true }
+    ).select("-password");
 
-    // Lấy lại thông tin tài khoản đã cập nhật
-    const account = await Account.findOne({ _id: id });
-
-    res.json(account);
+    res.json(updatedAccount);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Cập nhật thất bại" });
   }
 };
 
+// [DELETE] /admin/accounts/:id
 module.exports.delete = async (req, res) => {
   try {
     const id = req.params.id;
 
-    await Account.updateOne(
-      {
-        _id: id,
-      },
-      { deleted: true }
-    );
+    await Account.findByIdAndUpdate(id, { deleted: true });
 
-    const record = await Account.find({ deleted: false });
-
-    res.json(record);
+    res.status(200).json({ message: "Xóa tài khoản thành công" });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
+// [PATCH] /admin/accounts/status/:id
 module.exports.changeStatus = async (req, res) => {
   try {
-    const id = req.params.id;
-    const status = req.params.status;
+    const { id } = req.params;
+    const { status } = req.body;
 
-    await Account.updateOne({ _id: id }, { status: status });
+    const account = await Account.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
 
-    const account = await Account.find({ _id: id });
     res.status(200).json(account);
   } catch (error) {
     console.error(error);
@@ -146,37 +149,26 @@ module.exports.changeStatus = async (req, res) => {
   }
 };
 
+// [PATCH] /admin/accounts/change-multiple
 module.exports.changeMultiPatch = async (req, res) => {
   try {
-    // const key = {
-    //   STATUS: "status",
-    //   DELETE: "delete",
-    // };
+    const { ids, key, value } = req.body;
 
-    const ids = req.body.ids;
-    const Key = req.body.key;
-    const value = req.body.value;
-
-    if (!Array.isArray(ids) || ids.length === 0) {
-      return res
-        .status(400)
-        .json({ error: "Invalid or missing IDs", receivedIds: ids });
+    if (
+      !Array.isArray(ids) ||
+      ids.length === 0 ||
+      !ids.every((id) => mongoose.Types.ObjectId.isValid(id))
+    ) {
+      return res.status(400).json({ error: "Danh sách ID không hợp lệ" });
     }
 
-    if (!ids.every((id) => mongoose.Types.ObjectId.isValid(id))) {
-      return res.status(400).json({ error: "Invalid ID format" });
-    }
-
-    switch (Key) {
+    switch (key) {
       case "status":
         await Account.updateMany(
           { _id: { $in: ids } },
           { $set: { status: value } }
         );
-
-        res.status(200).json({
-          message: "Status updated successfully!",
-        });
+        res.status(200).json({ message: "Cập nhật trạng thái thành công!" });
         break;
 
       case "delete":
@@ -184,16 +176,11 @@ module.exports.changeMultiPatch = async (req, res) => {
           { _id: { $in: ids } },
           { $set: { deleted: true } }
         );
-
-        res.status(200).json({
-          message: "Account deleted successfully!",
-        });
+        res.status(200).json({ message: "Xóa tài khoản thành công!" });
         break;
 
       default:
-        res.status(400).json({
-          error: "Invalid key provided!",
-        });
+        res.status(400).json({ error: "Key không hợp lệ!" });
         break;
     }
   } catch (error) {

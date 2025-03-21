@@ -5,6 +5,7 @@ const roleRoutes = require("./role.route");
 const accountRoutes = require("./account.route");
 const storeRoutes = require("./store.route");
 const bannerRoutes = require("./banner.route");
+const authRoutes = require("./auth.route");
 
 module.exports = (app) => {
   app.use("/brands", brandRoutes);
@@ -20,4 +21,6 @@ module.exports = (app) => {
   app.use("/stores", storeRoutes);
 
   app.use("/banner", bannerRoutes);
+
+  app.use("/auth", authRoutes);
 };

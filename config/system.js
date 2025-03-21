@@ -1,5 +1,6 @@
 PATH_ADMIN = "/adminbb";
 
 module.exports = {
-    prefixAdmin: PATH_ADMIN
-}
+  prefixAdmin: "/admin",
+  jwtSecret: process.env.JWT_SECRET,
+};
