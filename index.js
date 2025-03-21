@@ -27,11 +27,11 @@ database.connect();
 
 // Định nghĩa các route
 const routeAdmin = require("./routes/admin/index.route");
-// const routeClient = require("./routes/client/index.route");
+const routeClient = require("./routes/client/index.route");
 
 // Kết nối các route với ứng dụng
 routeAdmin(app);
-// routeClient(app); // Bỏ comment nếu cần thêm route client
+routeClient(app); // Bỏ comment nếu cần thêm route client
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
