@@ -3,6 +3,7 @@ require("dotenv").config();
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger-output.json");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 const app = express(); // Đảm bảo khai báo app trước khi sử dụng
 
@@ -12,6 +13,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(express.json());
 const port = process.env.PORT;
 
+app.use(cookieParser());
 app.use(
   cors({
     origin: "http://localhost:3000", // Đổi thành URL của frontend khi deploy

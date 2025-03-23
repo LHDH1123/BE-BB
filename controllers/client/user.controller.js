@@ -3,6 +3,48 @@ const ForgotPassword = require("../../models/forgot-password.model");
 const sendMailHelper = require("../../helpers/sendMail");
 const bcrypt = require("bcryptjs");
 const jwtHelper = require("../../helpers/jwt");
+const jwt = require("jsonwebtoken");
+
+module.exports.getUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findOne({ _id: id }).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "Người dùng không tồn tại" });
+    }
+
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error("❌ Lỗi:", error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+module.exports.editUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { fullName, email, phone } = req.body;
+
+    // Tìm user trước khi cập nhật
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "Người dùng không tồn tại" });
+    }
+
+    // Cập nhật user
+    await User.updateOne({ _id: id }, { fullName, email, phone });
+
+    // Lấy lại thông tin user sau khi cập nhật
+    const updatedUser = await User.findById(id).select("-password");
+
+    res.status(200).json({ user: updatedUser });
+  } catch (error) {
+    console.error("❌ Lỗi:", error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
 
 module.exports.registerPost = async (req, res) => {
   try {
@@ -31,7 +73,15 @@ module.exports.loginPost = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email, deleted: false });
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "Email hoặc mật khẩu không đúng" });
+    }
+
+    // So sánh mật khẩu phải có await
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
       return res
         .status(400)
         .json({ message: "Email hoặc mật khẩu không đúng" });
@@ -40,10 +90,12 @@ module.exports.loginPost = async (req, res) => {
     const accessToken = jwtHelper.generateAccessToken(user);
     const refreshToken = jwtHelper.generateRefreshToken(user);
 
+    // Lưu refreshToken vào HTTP-Only Cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
+      secure: true, // Chỉ dùng trên HTTPS
+      sameSite: "Strict", // Ngăn chặn CSRF
+      path: "/",
     });
 
     res.status(200).json({ accessToken });
@@ -164,5 +216,36 @@ module.exports.resetPasswordPost = async (req, res) => {
   } catch (error) {
     console.error("❌ Lỗi đặt lại mật khẩu:", error);
     res.status(500).json({ message: "Lỗi server", error: error.message });
+  }
+};
+
+module.exports.refreshToken = async (req, res) => {
+  try {
+    console.log("🔍 Cookies nhận được:", req.cookies); // Debug xem có cookie không
+
+    if (req.cookies.refreshToken) {
+      const { refreshToken } = req.cookies;
+
+      jwt.verify(
+        refreshToken,
+        process.env.JWT_REFRESH_SECRET,
+        async (err, decoded) => {
+          if (err) {
+            return res
+              .status(403)
+              .json({ message: "Refresh token không hợp lệ hoặc đã hết hạn" });
+          }
+
+          const newAccessToken = jwtHelper.generateAccessToken({
+            _id: decoded.userId,
+          });
+
+          res.status(200).json({ accessToken: newAccessToken });
+        }
+      );
+    }
+  } catch (error) {
+    console.error("❌ Lỗi refresh token:", error);
+    res.status(500).json({ message: "Lỗi server" });
   }
 };
