@@ -1,25 +1,45 @@
 const Cart = require("../../models/cart.model");
 
 module.exports.cartId = async (req, res, next) => {
-  if (!req.cookies.cartId) {
-    const cart = new Cart();
-    await cart.save();
+  try {
+    let cartId = req.cookies.cartId;
+    let cart;
 
-    const expiresCookie = 365 * 24 * 60 * 60 * 1000;
+    // Nếu chưa có giỏ hàng, tạo mới
+    if (!cartId) {
+      cart = new Cart({ products: [] });
+      await cart.save();
 
-    res.cookie("cartId", cart.id, {
-      expires: new Date(Date.now() + expiresCookie),
-    });
-  } else {
-    const cart = await Cart.findOne({ _id: req.cookies.cartId });
+      const expiresCookie = 365 * 24 * 60 * 60 * 1000; // 1 năm
 
-    cart.totalQuantity = cart.products.reduce(
-      (sum, item) => sum + item.quantity,
-      0
-    );
+      res.cookie("cartId", cart._id.toString(), {
+        expires: new Date(Date.now() + expiresCookie),
+        httpOnly: true, // Bảo mật cookie
+      });
+    } else {
+      cart = await Cart.findById(cartId);
+
+      // Nếu không tìm thấy giỏ hàng, tạo mới
+      if (!cart) {
+        cart = new Cart({ products: [] });
+        await cart.save();
+
+        res.cookie("cartId", cart._id.toString(), {
+          expires: new Date(Date.now() + expiresCookie),
+          httpOnly: true,
+        });
+      }
+    }
+
+    // Tính tổng số lượng sản phẩm trong giỏ hàng
+    cart.totalQuantity =
+      cart.products?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
     res.locals.miniCart = cart;
-  }
 
-  next();
+    next();
+  } catch (error) {
+    console.error("Lỗi middleware giỏ hàng:", error);
+    res.status(500).json({ error: "Lỗi server" });
+  }
 };
