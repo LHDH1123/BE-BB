@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const cartSchema = new mongoose.Schema(
+const likeSchema = new mongoose.Schema(
   {
     user_id: String,
     products: [{ product_id: String }],
@@ -10,6 +10,6 @@ const cartSchema = new mongoose.Schema(
   }
 );
 
-const Cart = mongoose.model("Cart", cartSchema, "carts");
+const Like = mongoose.model("Like", likeSchema, "likes");
 
-module.exports = Cart;
+module.exports = Like;
