@@ -45,7 +45,6 @@ module.exports.editUser = async (req, res) => {
   }
 };
 
-
 module.exports.registerPost = async (req, res) => {
   try {
     const { fullName, email, password, phone } = req.body;
