@@ -8,6 +8,6 @@ router.post("/add/:userId", controller.addPost);
 
 router.delete("/delete/:userId/:productId", controller.delete);
 
-router.delete("/delete/:userId/", controller.deleteLike);
+router.delete("/delete/:userId", controller.deleteLike);
 
 module.exports = router;

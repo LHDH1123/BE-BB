@@ -1,18 +1,30 @@
 const swaggerAutogen = require("swagger-autogen")();
+const path = require("path");
 
 // Cấu hình Swagger
 const doc = {
   info: {
     title: "My API",
-    description: "API documentation for managing brands and categories",
+    description: "API documentation for Admin and Client",
     version: "1.0.0",
   },
   host: "localhost:3010",
   schemes: ["http"],
+  tags: [
+    {
+      name: "Admin",
+    },
+    {
+      name: "Client",
+    },
+  ],
 };
 
+// Định nghĩa đầy đủ cả admin và client routes
 const outputFile = "../swagger-output.json";
-// Sử dụng path.join để xác định đúng đường dẫn tới file route
-const routes = ["../routes/admin/index.route.js"]; // Đảm bảo đường dẫn chính xác
+const routes = [
+  "../routes/admin/index.route.js",
+  "../routes/client/index.route.js",
+];
 
 swaggerAutogen(outputFile, routes, doc);
