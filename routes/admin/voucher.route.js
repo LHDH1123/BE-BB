@@ -1,5 +1,5 @@
 const express = require("express");
-const controller = require("../../controllers/client/voucher.controller");
+const controller = require("../../controllers/admin/voucher.controller");
 const router = express.Router();
 
 router.get("/", controller.index);

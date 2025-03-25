@@ -6,6 +6,7 @@ const accountRoutes = require("./account.route");
 const storeRoutes = require("./store.route");
 const bannerRoutes = require("./banner.route");
 const authRoutes = require("./auth.route");
+const voucherRoutes = require("./voucher.route");
 
 module.exports = (app) => {
   app.use("/brands", brandRoutes);
@@ -23,4 +24,6 @@ module.exports = (app) => {
   app.use("/banner", bannerRoutes);
 
   app.use("/auth", authRoutes);
+
+  app.use("/voucher", voucherRoutes);
 };

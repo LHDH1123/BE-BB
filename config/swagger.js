@@ -13,6 +13,6 @@ const doc = {
 
 const outputFile = "../swagger-output.json";
 // Sử dụng path.join để xác định đúng đường dẫn tới file route
-const routes = ["../routes/client/index.route.js"]; // Đảm bảo đường dẫn chính xác
+const routes = ["../routes/admin/index.route.js"]; // Đảm bảo đường dẫn chính xác
 
 swaggerAutogen(outputFile, routes, doc);
