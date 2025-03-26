@@ -29,7 +29,7 @@ module.exports.addPost = async (req, res) => {
     const {
       titleAddress,
       name,
-      lastName, // Use camelCase for consistency
+      last_name,
       email,
       phone,
       city,
@@ -40,14 +40,18 @@ module.exports.addPost = async (req, res) => {
     } = req.body;
 
     const { userId } = req.params;
-    console.log(userId);
 
-    // Create new address
+    if (status === true) {
+      // Nếu thêm địa chỉ mới là `status: true`, cập nhật tất cả địa chỉ khác thành `false`
+      await Address.updateMany({ user_id: userId }, { status: false });
+    }
+
+    // Tạo địa chỉ mới
     const newAddress = new Address({
       user_id: userId,
       titleAddress,
       name,
-      lastName,
+      last_name,
       email,
       phone,
       city,
@@ -83,6 +87,22 @@ module.exports.editAddress = async (req, res) => {
       status,
     } = req.body;
     const { addressId } = req.params;
+
+    // Tìm địa chỉ hiện tại
+    const existingAddress = await Address.findById(addressId);
+    if (!existingAddress) {
+      return res.status(404).json({ message: "Address not found" });
+    }
+
+    if (status === true) {
+      // Nếu địa chỉ được chỉnh sửa có `status: true`, tất cả địa chỉ khác phải `false`
+      await Address.updateMany(
+        { user_id: existingAddress.user_id, _id: { $ne: addressId } },
+        { status: false }
+      );
+    }
+
+    // Cập nhật địa chỉ
     const updatedAddress = await Address.findOneAndUpdate(
       { _id: addressId },
       {
@@ -99,9 +119,11 @@ module.exports.editAddress = async (req, res) => {
       },
       { new: true }
     );
+
     if (!updatedAddress) {
       return res.status(404).json({ message: "Address not found" });
     }
+
     res.status(200).json(updatedAddress);
   } catch (error) {
     res.status(500).json({ error: error.message });
