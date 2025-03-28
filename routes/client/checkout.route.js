@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get("/:userId", controller.index);
 
-router.post("/oder/:userId", controller.checkoutPost);
+router.post("/order/:userId", controller.checkoutPost);
 
 router.get("/success/:orderId", controller.success);
 

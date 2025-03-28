@@ -11,6 +11,8 @@ router.get("/", controller.index);
 
 router.get("/:id", controller.getCategory);
 
+router.get("/slug/:slug", controller.getCategorySlug);
+
 router.post(
   "/create",
   upload.single("thumbnail"),

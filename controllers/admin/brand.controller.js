@@ -20,6 +20,17 @@ module.exports.getBrand = async (req, res) => {
   }
 };
 
+module.exports.getBrandName = async (req, res) => {
+  try {
+    const name = req.params.name;
+    const brand = await Brand.findOne({ name, deleted: false }).lean();
+
+    res.status(200).json(brand);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports.createPost = async (req, res) => {
   try {
     let { name, status, thumbnail } = req.body;

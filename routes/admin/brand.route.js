@@ -11,6 +11,8 @@ router.get("/", controller.index);
 
 router.get("/:id", controller.getBrand);
 
+router.get("/name/:name", controller.getBrandName);
+
 router.post(
   "/create",
   upload.any("thumbnail"), // Nhận file từ form-data

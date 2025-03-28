@@ -24,6 +24,17 @@ module.exports.getCategory = async (req, res) => {
   }
 };
 
+module.exports.getCategorySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const record = await Category.findOne({ slug, deleted: false }).lean();
+    res.json(record);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports.createPost = async (req, res) => {
   try {
     const { title, parent_id, status } = req.body;

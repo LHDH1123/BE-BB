@@ -53,6 +53,27 @@
         }
       }
     },
+    "/brands/name/{name}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/brands/create": {
       "post": {
         "description": "",
@@ -249,6 +270,27 @@
         }
       }
     },
+    "/categorys/slug/{slug}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/categorys/create": {
       "post": {
         "description": "",
@@ -421,6 +463,30 @@
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/products/slug/{slug}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "slug",
             "in": "path",
             "required": true,
             "type": "string"
@@ -2186,7 +2252,7 @@
         }
       }
     },
-    "/check-out/oder/{userId}": {
+    "/check-out/order/{userId}": {
       "post": {
         "description": "",
         "parameters": [
@@ -2301,7 +2367,7 @@
                 "name": {
                   "example": "any"
                 },
-                "lastName": {
+                "last_name": {
                   "example": "any"
                 },
                 "email": {
