@@ -77,6 +77,14 @@ module.exports.createPost = async (req, res) => {
     //     .status(400)
     //     .json({ error: "Ảnh không hợp lệ. Vui lòng thử lại!" });
     // }
+    const existingProduct = await Product.findOne({
+      $or: [{ title }, { SKU }],
+      deleted: false,
+    });
+
+    if (existingProduct) {
+      return res.status(400).json({ error: "Sản phẩm đã tồn tại!" });
+    }
 
     const product = new Product({
       title,
@@ -130,6 +138,16 @@ module.exports.editPatch = async (req, res) => {
 
     let { title, category_id, brand_id, thumbnail, status, description } =
       req.body;
+
+    const existingProduct = await Product.findOne({
+      $or: [{ title }, { SKU: req.body.SKU }],
+      _id: { $ne: id }, // Loại trừ sản phẩm hiện tại
+      deleted: false,
+    });
+
+    if (existingProduct) {
+      return res.status(400).json({ error: "Sản phẩm đã tồn tại!" });
+    }
 
     await Product.updateOne(
       { _id: id },

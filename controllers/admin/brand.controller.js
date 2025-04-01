@@ -38,15 +38,25 @@ module.exports.createPost = async (req, res) => {
     if (!name) {
       return res.status(400).json({ error: "Name is required" });
     }
+
+    // Kiểm tra xem thương hiệu đã tồn tại chưa
+    const existingBrand = await Brand.findOne({
+      name: name.trim(),
+      deleted: false,
+    });
+    if (existingBrand) {
+      return res.status(400).json({ error: "Thương hiệu đã tồn tại" });
+    }
+
     // Đảm bảo status có giá trị mặc định nếu không gửi từ client
     status = status ?? true;
 
-    const brand = new Brand({ name, status, thumbnail });
+    const brand = new Brand({ name: name.trim(), status, thumbnail });
     await brand.save();
 
     res.status(201).json(brand);
   } catch (error) {
-    console.error(error);
+    console.error("❌ Error creating brand:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -69,15 +79,30 @@ module.exports.editPatch = async (req, res) => {
     const id = req.params.id;
     const { name, status, thumbnail } = req.body;
 
-    if (name === "") {
-      return res.status(400).json({ error: "Name and status are required" });
+    if (!name) {
+      return res.status(400).json({ error: "Name is required" });
     }
-    console.log(thumbnail);
-    await Brand.updateOne({ _id: id }, { name, status, thumbnail });
+
+    // Kiểm tra xem thương hiệu đã tồn tại chưa (ngoại trừ chính nó)
+    const existingBrand = await Brand.findOne({
+      name: name.trim(),
+      _id: { $ne: id },
+      deleted: false,
+    });
+
+    if (existingBrand) {
+      return res.status(400).json({ error: "Thương hiệu đã tồn tại" });
+    }
+
+    await Brand.updateOne(
+      { _id: id },
+      { name: name.trim(), status, thumbnail }
+    );
 
     const brand = await Brand.findById(id);
     res.status(200).json(brand);
   } catch (error) {
+    console.error("❌ Error updating brand:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

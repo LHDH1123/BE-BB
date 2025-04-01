@@ -21,10 +21,16 @@ module.exports.getVoucher = async (req, res) => {
   }
 };
 
-// Tạo mới voucher
 module.exports.createPost = async (req, res) => {
   try {
     const { title, discount, status, description } = req.body;
+
+    // Kiểm tra xem voucher có tồn tại không
+    const existingVoucher = await Voucher.findOne({ title });
+    if (existingVoucher) {
+      return res.status(400).json({ error: "Voucher với tên này đã tồn tại" });
+    }
+
     const newVoucher = new Voucher({ title, discount, status, description });
     await newVoucher.save();
     res.status(201).json(newVoucher);
@@ -38,6 +44,12 @@ module.exports.edit = async (req, res) => {
   try {
     const id = req.params.id;
     const { title, discount, status, description } = req.body;
+    
+    const existingVoucher = await Voucher.findOne({ title });
+    if (existingVoucher) {
+      return res.status(400).json({ error: "Voucher với tên này đã tồn tại" });
+    }
+
     const updatedVoucher = await Voucher.findByIdAndUpdate(
       id,
       { title, discount, status, description },

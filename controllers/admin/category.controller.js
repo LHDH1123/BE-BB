@@ -38,11 +38,26 @@ module.exports.getCategorySlug = async (req, res) => {
 module.exports.createPost = async (req, res) => {
   try {
     const { title, parent_id, status } = req.body;
-    const category = new Category({ title, parent_id, status });
+
+    if (!title) {
+      return res.status(400).json({ error: "Title is required" });
+    }
+
+    // Kiểm tra xem danh mục đã tồn tại chưa (không tính danh mục đã bị xóa)
+    const existingCategory = await Category.findOne({
+      title: title.trim(),
+      deleted: false,
+    });
+    if (existingCategory) {
+      return res.status(400).json({ error: "Danh mục đã tồn tại" });
+    }
+
+    const category = new Category({ title: title.trim(), parent_id, status });
     await category.save();
-    res.json(category);
+
+    res.status(201).json(category);
   } catch (error) {
-    console.error(error);
+    console.error("❌ Error creating category:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -63,11 +78,31 @@ module.exports.edit = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, parent_id, status } = req.body;
-    await Category.updateOne({ _id: id }, { title, parent_id, status });
+
+    if (!title) {
+      return res.status(400).json({ error: "Title is required" });
+    }
+
+    // Kiểm tra xem danh mục đã tồn tại chưa (ngoại trừ chính nó)
+    const existingCategory = await Category.findOne({
+      title: title.trim(),
+      _id: { $ne: id }, // Loại trừ chính danh mục đang chỉnh sửa
+      deleted: false,
+    });
+
+    if (existingCategory) {
+      return res.status(400).json({ error: "Danh mục đã tồn tại" });
+    }
+
+    await Category.updateOne(
+      { _id: id },
+      { title: title.trim(), parent_id, status }
+    );
+
     const category = await Category.findById(id);
-    res.json(category);
+    res.status(200).json(category);
   } catch (error) {
-    console.error(error);
+    console.error("❌ Error updating category:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
