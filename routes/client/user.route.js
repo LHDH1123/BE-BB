@@ -3,6 +3,8 @@ const controller = require("../../controllers/client/user.controller");
 const router = express.Router();
 const validate = require("../../validates/client/user.vadidate");
 
+router.get("/", controller.getAllUser);
+
 router.get("/logout", controller.logout);
 
 router.get("/:id", controller.getUser);

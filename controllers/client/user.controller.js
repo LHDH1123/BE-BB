@@ -5,6 +5,17 @@ const bcrypt = require("bcryptjs");
 const jwtHelper = require("../../helpers/jwt");
 const jwt = require("jsonwebtoken");
 
+module.exports.getAllUser = async (req, res) => {
+  try {
+    const user = await User.find({});
+
+    res.status(200).json( user );
+  } catch (error) {
+    console.error("❌ Lỗi:", error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
 module.exports.getUser = async (req, res) => {
   try {
     const { id } = req.params;

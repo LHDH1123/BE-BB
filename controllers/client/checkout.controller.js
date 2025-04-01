@@ -49,7 +49,9 @@ module.exports.index = async (req, res) => {
 module.exports.checkoutPost = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const userInfo = req.body;
+    const { fullName, phone, address } = req.body;
+    const userInfo = { fullName, phone, address };
+
     const cart = await Cart.findOne({ user_id: userId });
     if (!cart) return res.status(404).json({ message: "Cart not found" });
 
@@ -72,7 +74,7 @@ module.exports.checkoutPost = async (req, res) => {
     const validProductsOrder = productsOrder.filter(Boolean);
 
     const order = new Order({
-      cart_id: userId,
+      user_id: userId,
       userInfo,
       products: validProductsOrder,
     });
