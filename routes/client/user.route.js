@@ -25,6 +25,8 @@ router.post("/password/otp", controller.otpPasswordPost);
 
 router.post("/password/reset", controller.resetPasswordPost);
 
+router.post("/change-pass/:userId", controller.changePass);
+
 router.post("/refresh-token", controller.refreshToken);
 
 module.exports = router;

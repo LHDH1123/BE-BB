@@ -9,7 +9,7 @@ module.exports.getAllUser = async (req, res) => {
   try {
     const user = await User.find({});
 
-    res.status(200).json( user );
+    res.status(200).json(user);
   } catch (error) {
     console.error("❌ Lỗi:", error);
     res.status(500).json({ message: "Lỗi server" });
@@ -200,6 +200,36 @@ module.exports.otpPasswordPost = async (req, res) => {
   } catch (error) {
     console.error("❌ Lỗi xác thực OTP:", error);
     res.status(500).json({ message: "Lỗi server", error: error.message });
+  }
+};
+
+module.exports.changePass = async (req, res) => {
+  try {
+    const { userId } = req.params; // lấy từ middleware xác thực
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ message: "Thiếu thông tin." });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user)
+      return res.status(404).json({ message: "Không tìm thấy người dùng." });
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Mật khẩu cũ không đúng." });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.json({ message: "Đổi mật khẩu thành công." });
+  } catch (err) {
+    console.error("Lỗi đổi mật khẩu:", err);
+    res.status(500).json({ message: "Lỗi server." });
   }
 };
 

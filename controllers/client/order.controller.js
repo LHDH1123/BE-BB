@@ -26,3 +26,19 @@ module.exports.getOrderUser = async (req, res) => {
     res.status(500).json({ message: "Lỗi server" });
   }
 };
+
+module.exports.getOrderDetail = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    const order = await Order.find({ _id: orderId });
+    if (!order) {
+      return res.status(404).json({ message: "Đơn hàng không tồn tại" });
+    }
+
+    res.status(200).json(order);
+  } catch (error) {
+    console.error("❌ Lỗi:", error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
