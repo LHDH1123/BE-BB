@@ -16,6 +16,9 @@ const orderSchema = new mongoose.Schema(
         quantity: Number,
       },
     ],
+    isCheckout: Boolean,
+    voucher_id: String,
+    total: Number,
     deleted: {
       type: Boolean,
       default: false,
