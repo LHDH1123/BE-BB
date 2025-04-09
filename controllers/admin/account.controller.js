@@ -9,7 +9,7 @@ module.exports.index = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, error: "Internal Server Error" });
-  }
+  } 
 };
 
 // [POST] /admin/accounts/create
@@ -28,18 +28,24 @@ module.exports.createPost = async (req, res) => {
 
     // Kiểm tra email tồn tại
     if (await Account.findOne({ email, deleted: false })) {
-      return res.status(400).json({ success: false, error: `Email ${email} đã tồn tại` });
+      return res
+        .status(400)
+        .json({ success: false, error: `Email ${email} đã tồn tại` });
     }
 
     // Kiểm tra vai trò hợp lệ
     const role = await Role.findOne({ _id: role_id, deleted: false });
     if (!role) {
-      return res.status(400).json({ success: false, error: "Vai trò không hợp lệ" });
+      return res
+        .status(400)
+        .json({ success: false, error: "Vai trò không hợp lệ" });
     }
 
     // Kiểm tra mật khẩu trùng khớp
     if (confirmPassword !== password) {
-      return res.status(400).json({ success: false, error: "Mật khẩu không khớp" });
+      return res
+        .status(400)
+        .json({ success: false, error: "Mật khẩu không khớp" });
     }
 
     // Mã hóa mật khẩu
@@ -72,7 +78,9 @@ module.exports.edit = async (req, res) => {
       deleted: false,
     }).select("-password");
     if (!record) {
-      return res.status(404).json({ success: false, error: "Account not found" });
+      return res
+        .status(404)
+        .json({ success: false, error: "Account not found" });
     }
     res.json({ success: true, data: record });
   } catch (error) {
@@ -89,12 +97,16 @@ module.exports.editPatch = async (req, res) => {
 
     // Kiểm tra email có tồn tại nhưng không phải của tài khoản đang cập nhật
     if (await Account.findOne({ _id: { $ne: id }, email, deleted: false })) {
-      return res.status(400).json({ success: false, error: `Email ${email} đã tồn tại` });
+      return res
+        .status(400)
+        .json({ success: false, error: `Email ${email} đã tồn tại` });
     }
 
     // Kiểm tra vai trò hợp lệ
     if (role_id && !(await Role.findOne({ _id: role_id, deleted: false }))) {
-      return res.status(400).json({ success: false, error: "Vai trò không hợp lệ" });
+      return res
+        .status(400)
+        .json({ success: false, error: "Vai trò không hợp lệ" });
     }
 
     // Cập nhật thông tin tài khoản
@@ -118,7 +130,9 @@ module.exports.delete = async (req, res) => {
 
     await Account.findByIdAndUpdate(id, { deleted: true });
 
-    res.status(200).json({ success: true, message: "Xóa tài khoản thành công" });
+    res
+      .status(200)
+      .json({ success: true, message: "Xóa tài khoản thành công" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, error: "Internal Server Error" });
@@ -154,7 +168,9 @@ module.exports.changeMultiPatch = async (req, res) => {
       ids.length === 0 ||
       !ids.every((id) => mongoose.Types.ObjectId.isValid(id))
     ) {
-      return res.status(400).json({ success: false, error: "Danh sách ID không hợp lệ" });
+      return res
+        .status(400)
+        .json({ success: false, error: "Danh sách ID không hợp lệ" });
     }
 
     switch (key) {
@@ -163,7 +179,9 @@ module.exports.changeMultiPatch = async (req, res) => {
           { _id: { $in: ids } },
           { $set: { status: value } }
         );
-        res.status(200).json({ success: true, message: "Cập nhật trạng thái thành công!" });
+        res
+          .status(200)
+          .json({ success: true, message: "Cập nhật trạng thái thành công!" });
         break;
 
       case "delete":
@@ -171,7 +189,9 @@ module.exports.changeMultiPatch = async (req, res) => {
           { _id: { $in: ids } },
           { $set: { deleted: true } }
         );
-        res.status(200).json({ success: true, message: "Xóa tài khoản thành công!" });
+        res
+          .status(200)
+          .json({ success: true, message: "Xóa tài khoản thành công!" });
         break;
 
       default:
@@ -182,7 +202,8 @@ module.exports.changeMultiPatch = async (req, res) => {
     console.error(error);
     res.status(500).json({ success: false, error: "Internal Server Error" });
   }
-};const Account = require("../../models/account.model");
+};
+const Account = require("../../models/account.model");
 const Role = require("../../models/role.model");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");

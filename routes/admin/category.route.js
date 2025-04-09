@@ -2,30 +2,78 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const uploadCloudinary = require("../../middlewares/admin/uploadCloud.middleware");
+const auth = require("../../middlewares/admin/auth.middlewares"); // 👈 Thêm dòng này
+
 const upload = multer({
   limits: { fileSize: 50 * 1024 * 1024 }, // Giới hạn 50MB
 });
+
 const controller = require("../../controllers/admin/category.controller");
 
-router.get("/", controller.index);
+// Lấy danh sách category
+router.get(
+  "/",
+  auth.requireAuth,
+  auth.requirePermission("products-category_view"),
+  controller.index
+);
 
-router.get("/:id", controller.getCategory);
+// Lấy category theo ID
+router.get(
+  "/:id",
+  auth.requireAuth,
+  auth.requirePermission("products-category_view"),
+  controller.getCategory
+);
 
-router.get("/slug/:slug", controller.getCategorySlug);
+// Lấy category theo slug
+router.get(
+  "/slug/:slug",
+  auth.requireAuth,
+  auth.requirePermission("products-category_view"),
+  controller.getCategorySlug
+);
 
+// Tạo category mới
 router.post(
   "/create",
+  auth.requireAuth,
+  auth.requirePermission("products-category_create"),
   upload.single("thumbnail"),
   uploadCloudinary.upload,
   controller.createPost
 );
 
-router.patch("/edit/:id", controller.edit);
+// Chỉnh sửa category
+router.patch(
+  "/edit/:id",
+  auth.requireAuth,
+  auth.requirePermission("products-category_edit"),
+  controller.edit
+);
 
-router.patch("/change-status/:id/:status", controller.changeStatus);
+// Thay đổi trạng thái
+router.patch(
+  "/change-status/:id/:status",
+  auth.requireAuth,
+  auth.requirePermission("products-category_edit"),
+  controller.changeStatus
+);
 
-router.patch("/change-multi", controller.changeMultiPatch);
+// Chỉnh sửa nhiều
+router.patch(
+  "/change-multi",
+  auth.requireAuth,
+  auth.requirePermission("products-category_edit"),
+  controller.changeMultiPatch
+);
 
-router.delete("/delete/:id", controller.deleteCategory);
+// Xoá category
+router.delete(
+  "/delete/:id",
+  auth.requireAuth,
+  auth.requirePermission("products-category_delete"),
+  controller.deleteCategory
+);
 
 module.exports = router;

@@ -1,19 +1,62 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../../controllers/admin/role.controller");
+const auth = require("../../middlewares/admin/auth.middlewares"); // 👈 Import middleware
 
-router.get("/", controller.index);
+// Lấy danh sách role
+router.get(
+  "/",
+  auth.requireAuth,
+  auth.requirePermission("roles_view"),
+  controller.index
+);
 
-router.get("/:id", controller.getRole);
+// Lấy role theo ID
+router.get(
+  "/:id",
+  auth.requireAuth,
+  auth.requirePermission("roles_view"),
+  controller.getRole
+);
 
-router.post("/create", controller.createPost);
+// Tạo mới role
+router.post(
+  "/create",
+  auth.requireAuth,
+  auth.requirePermission("roles_create"),
+  controller.createPost
+);
 
-router.patch("/editPermission/:id", controller.editPatch);
+// Chỉnh sửa permission
+router.patch(
+  "/editPermission/:id",
+  auth.requireAuth,
+  auth.requirePermission("roles_edit"),
+  controller.editPatch
+);
 
-router.patch("/edit/:id", controller.editPatchData);
+// Chỉnh sửa thông tin role
+router.patch(
+  "/edit/:id",
+  auth.requireAuth,
+  auth.requirePermission("roles_edit"),
+  controller.editPatchData
+);
 
-router.delete("/delete/:id", controller.delete);
+// Xoá role
+router.delete(
+  "/delete/:id",
+  auth.requireAuth,
+  auth.requirePermission("roles_delete"),
+  controller.delete
+);
 
-router.patch("/change-status/:id/:status", controller.changeStatus);
+// Đổi trạng thái role
+router.patch(
+  "/change-status/:id/:status",
+  auth.requireAuth,
+  auth.requirePermission("roles_edit"),
+  controller.changeStatus
+);
 
 module.exports = router;

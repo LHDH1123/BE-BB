@@ -1,17 +1,54 @@
 const express = require("express");
 const controller = require("../../controllers/admin/voucher.controller");
+const auth = require("../../middlewares/admin/auth.middlewares"); // 👈 Import middleware
 const router = express.Router();
 
-router.get("/", controller.index);
+// Danh sách voucher
+router.get(
+  "/",
+  auth.requireAuth,
+  auth.requirePermission("vouchers_view"),
+  controller.index
+);
 
-router.get("/:id", controller.getVoucher);
+// Lấy 1 voucher theo ID
+router.get(
+  "/:id",
+  auth.requireAuth,
+  auth.requirePermission("vouchers_view"),
+  controller.getVoucher
+);
 
-router.post("/create", controller.createPost);
+// Tạo voucher
+router.post(
+  "/create",
+  auth.requireAuth,
+  auth.requirePermission("vouchers_create"),
+  controller.createPost
+);
 
-router.patch("/edit/:id", controller.edit);
+// Chỉnh sửa voucher
+router.patch(
+  "/edit/:id",
+  auth.requireAuth,
+  auth.requirePermission("vouchers_edit"),
+  controller.edit
+);
 
-router.patch("/change-status/:id/:status", controller.changeStatus);
+// Đổi trạng thái
+router.patch(
+  "/change-status/:id/:status",
+  auth.requireAuth,
+  auth.requirePermission("vouchers_edit"),
+  controller.changeStatus
+);
 
-router.delete("/delete/:id", controller.deleteVoucher);
+// Xoá voucher
+router.delete(
+  "/delete/:id",
+  auth.requireAuth,
+  auth.requirePermission("vouchers_delete"),
+  controller.deleteVoucher
+);
 
 module.exports = router;

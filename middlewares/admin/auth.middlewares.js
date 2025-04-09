@@ -1,17 +1,17 @@
+const Account = require("../../models/account.model");
+const Role = require("../../models/role.model");
+
 module.exports.requireAuth = async (req, res, next) => {
   try {
-    // Lấy token từ header Authorization
-    const authHeader = req.headers.authorization;
+    // Lấy token từ cookie trước
+    let token = req.cookies.token;
 
-    // Kiểm tra xem có Authorization header không và nó có đúng định dạng không
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    // Nếu vẫn không có token, từ chối truy cập
+    if (!token) {
       return res.status(401).json({ message: "Unauthorized. Please log in." });
     }
 
-    // Lấy token từ header
-    const token = authHeader.split(" ")[1]; // Tách Bearer và token
-
-    // Kiểm tra token và tìm người dùng
+    // Tìm người dùng theo token
     const user = await Account.findOne({ token }).select("-password");
     if (!user) {
       return res
@@ -26,9 +26,24 @@ module.exports.requireAuth = async (req, res, next) => {
 
     res.locals.user = user;
     res.locals.role = role;
+
     next();
   } catch (error) {
     console.error("Error in requireAuth middleware:", error);
     return res.status(500).json({ message: "Internal server error." });
   }
+};
+
+module.exports.requirePermission = (permissionKey) => {
+  return (req, res, next) => {
+    const role = res.locals.role;
+
+    if (!role.permissions.includes(permissionKey)) {
+      return res
+        .status(403)
+        .json({ message: "Forbidden. You don't have permission." });
+    }
+
+    next();
+  };
 };
