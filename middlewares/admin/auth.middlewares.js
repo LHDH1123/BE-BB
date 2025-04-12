@@ -3,6 +3,9 @@ const Role = require("../../models/role.model");
 
 module.exports.requireAuth = async (req, res, next) => {
   try {
+    // if (req.cookies.refreshToken) {
+    //   next();
+    // }
     // Lấy token từ cookie trước
     let token = req.cookies.token;
 

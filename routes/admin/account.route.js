@@ -32,7 +32,7 @@ router.get(
   "/:id",
   auth.requireAuth,
   auth.requirePermission("accounts_view"),
-  controller.edit
+  controller.getAccount
 );
 
 router.patch(

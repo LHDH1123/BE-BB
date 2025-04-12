@@ -10,11 +10,11 @@ const voucherRoutes = require("./voucher.route");
 const authMiddleware = require("../../middlewares/admin/auth.middlewares");
 
 module.exports = (app) => {
-  app.use("/brands", authMiddleware.requireAuth, brandRoutes);
+  app.use("/admin/brands", authMiddleware.requireAuth, brandRoutes);
 
-  app.use("/categorys", authMiddleware.requireAuth, categoryRoutes);
+  app.use("/admin/categorys", authMiddleware.requireAuth, categoryRoutes);
 
-  app.use("/products", authMiddleware.requireAuth, productRoutes);
+  app.use("/admin/products", authMiddleware.requireAuth, productRoutes);
 
   app.use("/role", authMiddleware.requireAuth, roleRoutes);
 
