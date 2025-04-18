@@ -7,6 +7,7 @@ const storeRoutes = require("./store.route");
 const bannerRoutes = require("./banner.route");
 const authRoutes = require("./auth.route");
 const voucherRoutes = require("./voucher.route");
+const reviewRoutes = require("./review.route");
 const authMiddleware = require("../../middlewares/admin/auth.middlewares");
 
 module.exports = (app) => {
@@ -25,6 +26,8 @@ module.exports = (app) => {
   app.use("/banner", authMiddleware.requireAuth, bannerRoutes);
 
   app.use("/auth", authRoutes);
+
+  app.use("/review", reviewRoutes);
 
   app.use("/voucher", authMiddleware.requireAuth, voucherRoutes);
 };
