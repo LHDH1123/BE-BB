@@ -29,5 +29,5 @@ module.exports = (app) => {
 
   app.use("/review", reviewRoutes);
 
-  app.use("/voucher", authMiddleware.requireAuth, voucherRoutes);
+  app.use("/voucher", voucherRoutes);
 };

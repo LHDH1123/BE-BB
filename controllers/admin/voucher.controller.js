@@ -23,15 +23,20 @@ module.exports.getVoucher = async (req, res) => {
 
 module.exports.createPost = async (req, res) => {
   try {
-    const { title, discount, status, description } = req.body;
+    const { title, discount, status, min_order_total } = req.body;
 
     // Kiểm tra xem voucher có tồn tại không
-    const existingVoucher = await Voucher.findOne({ title });
+    const existingVoucher = await Voucher.findOne({ title, deleted: false });
     if (existingVoucher) {
       return res.status(400).json({ error: "Voucher với tên này đã tồn tại" });
     }
 
-    const newVoucher = new Voucher({ title, discount, status, description });
+    const newVoucher = new Voucher({
+      title,
+      discount,
+      status,
+      min_order_total,
+    });
     await newVoucher.save();
     res.status(201).json(newVoucher);
   } catch (error) {
@@ -43,8 +48,8 @@ module.exports.createPost = async (req, res) => {
 module.exports.edit = async (req, res) => {
   try {
     const id = req.params.id;
-    const { title, discount, status, description } = req.body;
-    
+    const { title, discount, status, min_order_total } = req.body;
+
     const existingVoucher = await Voucher.findOne({ title });
     if (existingVoucher) {
       return res.status(400).json({ error: "Voucher với tên này đã tồn tại" });
@@ -52,7 +57,7 @@ module.exports.edit = async (req, res) => {
 
     const updatedVoucher = await Voucher.findByIdAndUpdate(
       id,
-      { title, discount, status, description },
+      { title, discount, status, min_order_total },
       { new: true }
     );
     res.status(200).json(updatedVoucher);

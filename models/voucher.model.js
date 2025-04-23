@@ -5,7 +5,7 @@ const voucherSchema = new mongoose.Schema(
     title: String,
     status: Boolean,
     discount: Number,
-    description: String,
+    min_order_total: Number,
     deleted: {
       type: Boolean,
       default: false,

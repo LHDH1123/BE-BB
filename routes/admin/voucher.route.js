@@ -4,20 +4,10 @@ const auth = require("../../middlewares/admin/auth.middlewares"); // 👈 Import
 const router = express.Router();
 
 // Danh sách voucher
-router.get(
-  "/",
-  auth.requireAuth,
-  auth.requirePermission("vouchers_view"),
-  controller.index
-);
+router.get("/", controller.index);
 
 // Lấy 1 voucher theo ID
-router.get(
-  "/:id",
-  auth.requireAuth,
-  auth.requirePermission("vouchers_view"),
-  controller.getVoucher
-);
+router.get("/:id", controller.getVoucher);
 
 // Tạo voucher
 router.post(

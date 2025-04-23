@@ -46,7 +46,7 @@ router.patch(
 );
 
 router.delete(
-  "/:id",
+  "/delete/:id",
   auth.requireAuth,
   auth.requirePermission("accounts_delete"),
   controller.delete
