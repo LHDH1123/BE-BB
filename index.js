@@ -14,13 +14,13 @@ app.use(express.json());
 const port = process.env.PORT;
 
 app.use(cookieParser());
-app.use(cors());
-// app.use(
-//   cors({
-//     origin: "https://fe-beauty-box.vercel.app", // Đổi thành URL của frontend khi deploy
-//     credentials: true, // Cho phép gửi cookie từ frontend
-//   })
-// );
+// app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Đổi thành URL của frontend khi deploy
+    credentials: true, // Cho phép gửi cookie từ frontend
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded());
 
