@@ -17,6 +17,7 @@ app.use(cookieParser());
 // app.use(cors());
 app.use(
   cors({
+    // origin: "https://localhost:3000",
     origin: "https://fe-beauty-box.vercel.app", // Đổi thành URL của frontend khi deploy
     credentials: true, // Cho phép gửi cookie từ frontend
   })

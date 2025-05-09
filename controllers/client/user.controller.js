@@ -104,7 +104,7 @@ module.exports.loginPost = async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true, // Chỉ dùng trên HTTPS
-      sameSite: "Strict", // Ngăn chặn CSRF
+      sameSite: "None", // Ngăn chặn CSRF
       path: "/",
     });
 
