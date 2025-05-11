@@ -12,12 +12,7 @@ router.get(
 );
 
 // Lấy role theo ID
-router.get(
-  "/:id",
-  auth.requireAuth,
-  auth.requirePermission("roles_view"),
-  controller.getRole
-);
+router.get("/:id", controller.getRole);
 
 // Tạo mới role
 router.post(
