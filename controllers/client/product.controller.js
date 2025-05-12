@@ -211,3 +211,86 @@ module.exports.getAllProductSlug = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+module.exports.getAllProductName = async (req, res) => {
+  try {
+    const { name } = req.params;
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
+    const products = await Product.find({ deleted: false })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    const categoryIds = [
+      ...new Set(
+        products.map((p) => p.category_id?.toString()).filter(Boolean)
+      ),
+    ];
+    const brandIds = [
+      ...new Set(products.map((p) => p.brand_id?.toString()).filter(Boolean)),
+    ];
+    const productIds = products.map((p) => p._id.toString());
+
+    const [categories, brands, reviews] = await Promise.all([
+      Category.find({ _id: { $in: categoryIds } }).lean(),
+      Brand.find({ _id: { $in: brandIds }, deleted: false }).lean(),
+      Review.find({ product_id: { $in: productIds }, public: true }).lean(),
+    ]);
+
+    const categoryMap = categories.reduce((acc, cat) => {
+      acc[cat._id.toString()] = cat.title;
+      return acc;
+    }, {});
+
+    const brandMap = brands.reduce((acc, brand) => {
+      acc[brand._id.toString()] = brand.name;
+      return acc;
+    }, {});
+
+    // Gom review theo product_id
+    const reviewMap = {};
+    for (const review of reviews) {
+      const id = review.product_id.toString();
+      if (!reviewMap[id]) reviewMap[id] = [];
+      reviewMap[id].push(review);
+    }
+
+    const productsWithDetails = products.map((product) => {
+      const pid = product._id.toString();
+      const productReviews = reviewMap[pid] || [];
+      const ratingReviews = productReviews.filter(
+        (r) => typeof r.rating === "number"
+      );
+      const avgRating =
+        ratingReviews.reduce((sum, r) => sum + r.rating, 0) /
+        (ratingReviews.length || 1);
+
+      const discount = product.discountPercentage || 0;
+      const newPrice = Math.round(product.price * (1 - discount / 100));
+
+      return {
+        ...product,
+        nameCategory: categoryMap[product.category_id?.toString()] || null,
+        nameBrand: brandMap[product.brand_id?.toString()] || null,
+        avgRating: +avgRating.toFixed(1),
+        totalReviews: ratingReviews.length,
+        newPrice: newPrice,
+      };
+    });
+
+    // Lọc theo brand name từ URL
+    const filteredProducts = productsWithDetails.filter(
+      (product) => product.nameBrand?.toLowerCase() === name.toLowerCase()
+    );
+
+    res.status(200).json(filteredProducts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};

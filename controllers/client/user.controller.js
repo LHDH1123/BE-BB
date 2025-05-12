@@ -116,8 +116,20 @@ module.exports.loginPost = async (req, res) => {
 };
 
 module.exports.logout = (req, res) => {
-  res.clearCookie("refreshToken");
-  res.status(200).json({ message: "Đăng xuất thành công" });
+  try {
+    // Xóa refreshToken ở cookie bằng cách đảm bảo cấu hình giống khi tạo
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: true, // phù hợp khi dùng HTTPS
+      sameSite: "None", // để tương thích với frontend ở domain khác
+      path: "/", // phải đúng với path đã set khi tạo cookie
+    });
+
+    res.status(200).json({ message: "Đăng xuất thành công" });
+  } catch (error) {
+    console.error("❌ Lỗi logout:", error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
 };
 
 module.exports.forgotPasswordPost = async (req, res) => {

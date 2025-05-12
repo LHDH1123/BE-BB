@@ -11,4 +11,6 @@ router.get("/slug/:slug", controller.getProductSlug);
 
 router.get("/getAll/:slug", controller.getAllProductSlug);
 
+router.get("/getAllWithName/:name", controller.getAllProductName);
+
 module.exports = router;

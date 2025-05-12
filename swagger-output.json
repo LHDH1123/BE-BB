@@ -7,20 +7,83 @@
   },
   "host": "localhost:3010",
   "basePath": "/",
-  "tags": [
-    {
-      "name": "Admin"
-    },
-    {
-      "name": "Client"
-    }
-  ],
-  "schemes": [
-    "http"
-  ],
+
+  "schemes": ["http"],
   "paths": {
+    "/auth/login": {
+      "get": {
+        "tags": ["Auth"],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/auth/loginPost": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "tags": ["Auth"],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/admin/brands/": {
       "get": {
+        "tags": ["Brand"],
         "description": "",
         "responses": {
           "200": {
@@ -40,6 +103,7 @@
     },
     "/admin/brands/{id}": {
       "get": {
+        "tags": ["Brand"],
         "description": "",
         "parameters": [
           {
@@ -67,6 +131,7 @@
     },
     "/admin/brands/name/{name}": {
       "get": {
+        "tags": ["Brand"],
         "description": "",
         "parameters": [
           {
@@ -94,6 +159,7 @@
     },
     "/admin/brands/create": {
       "post": {
+        "tags": ["Brand"],
         "description": "",
         "parameters": [
           {
@@ -136,6 +202,7 @@
     },
     "/admin/brands/change-status/{id}/{status}": {
       "patch": {
+        "tags": ["Brand"],
         "description": "",
         "parameters": [
           {
@@ -169,6 +236,7 @@
     },
     "/admin/brands/change-multi": {
       "patch": {
+        "tags": ["Brand"],
         "description": "",
         "parameters": [
           {
@@ -211,6 +279,7 @@
     },
     "/admin/brands/edit/{id}": {
       "patch": {
+        "tags": ["Brand"],
         "description": "",
         "parameters": [
           {
@@ -259,6 +328,7 @@
     },
     "/admin/brands/delete/{id}": {
       "delete": {
+        "tags": ["Brand"],
         "description": "",
         "parameters": [
           {
@@ -286,6 +356,7 @@
     },
     "/admin/categorys/": {
       "get": {
+        "tags": ["Category"],
         "description": "",
         "responses": {
           "200": {
@@ -305,6 +376,7 @@
     },
     "/admin/categorys/{id}": {
       "get": {
+        "tags": ["Category"],
         "description": "",
         "parameters": [
           {
@@ -332,6 +404,7 @@
     },
     "/admin/categorys/slug/{slug}": {
       "get": {
+        "tags": ["Category"],
         "description": "",
         "parameters": [
           {
@@ -359,6 +432,7 @@
     },
     "/admin/categorys/create": {
       "post": {
+        "tags": ["Category"],
         "description": "",
         "parameters": [
           {
@@ -404,6 +478,7 @@
     },
     "/admin/categorys/edit/{id}": {
       "patch": {
+        "tags": ["Category"],
         "description": "",
         "parameters": [
           {
@@ -452,6 +527,7 @@
     },
     "/admin/categorys/change-status/{id}/{status}": {
       "patch": {
+        "tags": ["Category"],
         "description": "",
         "parameters": [
           {
@@ -485,6 +561,7 @@
     },
     "/admin/categorys/change-multi": {
       "patch": {
+        "tags": ["Category"],
         "description": "",
         "parameters": [
           {
@@ -524,6 +601,7 @@
     },
     "/admin/categorys/delete/{id}": {
       "delete": {
+        "tags": ["Category"],
         "description": "",
         "parameters": [
           {
@@ -551,6 +629,7 @@
     },
     "/admin/products/": {
       "get": {
+        "tags": ["Product"],
         "description": "",
         "responses": {
           "200": {
@@ -570,6 +649,7 @@
     },
     "/admin/products/{id}": {
       "get": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -600,6 +680,7 @@
     },
     "/admin/products/slug/{slug}": {
       "get": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -630,6 +711,7 @@
     },
     "/admin/products/create": {
       "post": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -696,6 +778,7 @@
     },
     "/admin/products/change-status/{id}/{status}": {
       "patch": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -732,6 +815,7 @@
     },
     "/admin/products/change-multi": {
       "patch": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -774,6 +858,7 @@
     },
     "/admin/products/edit/{id}": {
       "patch": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -846,6 +931,7 @@
     },
     "/admin/products/delete/{id}": {
       "delete": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -876,6 +962,7 @@
     },
     "/role/": {
       "get": {
+        "tags": ["Role"],
         "description": "",
         "responses": {
           "200": {
@@ -895,6 +982,7 @@
     },
     "/role/{id}": {
       "get": {
+        "tags": ["Role"],
         "description": "",
         "parameters": [
           {
@@ -919,6 +1007,7 @@
     },
     "/role/create": {
       "post": {
+        "tags": ["Role"],
         "description": "",
         "parameters": [
           {
@@ -958,6 +1047,7 @@
     },
     "/role/editPermission/{id}": {
       "patch": {
+        "tags": ["Role"],
         "description": "",
         "parameters": [
           {
@@ -997,6 +1087,7 @@
     },
     "/role/edit/{id}": {
       "patch": {
+        "tags": ["Role"],
         "description": "",
         "parameters": [
           {
@@ -1042,6 +1133,7 @@
     },
     "/role/delete/{id}": {
       "delete": {
+        "tags": ["Role"],
         "description": "",
         "parameters": [
           {
@@ -1069,6 +1161,7 @@
     },
     "/role/change-status/{id}/{status}": {
       "patch": {
+        "tags": ["Role"],
         "description": "",
         "parameters": [
           {
@@ -1102,6 +1195,7 @@
     },
     "/accounts/": {
       "get": {
+        "tags": ["Account"],
         "description": "",
         "responses": {
           "200": {
@@ -1121,6 +1215,7 @@
     },
     "/accounts/create": {
       "post": {
+        "tags": ["Account"],
         "description": "",
         "parameters": [
           {
@@ -1178,6 +1273,7 @@
     },
     "/accounts/{id}": {
       "get": {
+        "tags": ["Account"],
         "description": "",
         "parameters": [
           {
@@ -1208,6 +1304,7 @@
     },
     "/accounts/edit/{id}": {
       "patch": {
+        "tags": ["Account"],
         "description": "",
         "parameters": [
           {
@@ -1265,6 +1362,7 @@
     },
     "/accounts/delete/{id}": {
       "delete": {
+        "tags": ["Account"],
         "description": "",
         "parameters": [
           {
@@ -1292,6 +1390,7 @@
     },
     "/accounts/change-status/{id}/{status}": {
       "patch": {
+        "tags": ["Account"],
         "description": "",
         "parameters": [
           {
@@ -1337,6 +1436,7 @@
     },
     "/accounts/change-multi": {
       "patch": {
+        "tags": ["Account"],
         "description": "",
         "parameters": [
           {
@@ -1377,76 +1477,10 @@
         }
       }
     },
-    "/auth/login": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/auth/loginPost": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "example": "any"
-                },
-                "password": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/auth/logout": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
+
     "/review/": {
       "get": {
+        "tags": ["Review"],
         "description": "",
         "responses": {
           "200": {
@@ -1463,6 +1497,7 @@
     },
     "/review/feedback/{productId}": {
       "get": {
+        "tags": ["Review"],
         "description": "",
         "parameters": [
           {
@@ -1487,6 +1522,7 @@
     },
     "/review/like/{userId}/{productId}": {
       "post": {
+        "tags": ["Review"],
         "description": "",
         "parameters": [
           {
@@ -1517,6 +1553,7 @@
     },
     "/review/{userId}/{productId}": {
       "post": {
+        "tags": ["Review"],
         "description": "",
         "parameters": [
           {
@@ -1568,6 +1605,7 @@
     },
     "/review/edit/{id}": {
       "patch": {
+        "tags": ["Review"],
         "description": "",
         "parameters": [
           {
@@ -1616,6 +1654,7 @@
     },
     "/review/change-public/{id}/{public}": {
       "patch": {
+        "tags": ["Review"],
         "description": "",
         "parameters": [
           {
@@ -1646,6 +1685,7 @@
     },
     "/voucher/": {
       "get": {
+        "tags": ["Voucher"],
         "description": "",
         "responses": {
           "200": {
@@ -1662,6 +1702,7 @@
     },
     "/voucher/{id}": {
       "get": {
+        "tags": ["Voucher"],
         "description": "",
         "parameters": [
           {
@@ -1686,6 +1727,7 @@
     },
     "/voucher/create": {
       "post": {
+        "tags": ["Voucher"],
         "description": "",
         "parameters": [
           {
@@ -1731,6 +1773,7 @@
     },
     "/voucher/edit/{id}": {
       "patch": {
+        "tags": ["Voucher"],
         "description": "",
         "parameters": [
           {
@@ -1782,6 +1825,7 @@
     },
     "/voucher/change-status/{id}/{status}": {
       "patch": {
+        "tags": ["Voucher"],
         "description": "",
         "parameters": [
           {
@@ -1815,6 +1859,7 @@
     },
     "/voucher/delete/{id}": {
       "delete": {
+        "tags": ["Voucher"],
         "description": "",
         "parameters": [
           {
@@ -1842,6 +1887,7 @@
     },
     "/client/brands/": {
       "get": {
+        "tags": ["Brand"],
         "description": "",
         "responses": {
           "200": {
@@ -1855,6 +1901,7 @@
     },
     "/client/brands/{id}": {
       "get": {
+        "tags": ["Brand"],
         "description": "",
         "parameters": [
           {
@@ -1876,6 +1923,7 @@
     },
     "/client/brands/name/{name}": {
       "get": {
+        "tags": ["Brand"],
         "description": "",
         "parameters": [
           {
@@ -1897,6 +1945,7 @@
     },
     "/client/categorys/": {
       "get": {
+        "tags": ["Category"],
         "description": "",
         "responses": {
           "200": {
@@ -1910,6 +1959,7 @@
     },
     "/client/categorys/{id}": {
       "get": {
+        "tags": ["Category"],
         "description": "",
         "parameters": [
           {
@@ -1931,6 +1981,7 @@
     },
     "/client/categorys/slug/{slug}": {
       "get": {
+        "tags": ["Category"],
         "description": "",
         "parameters": [
           {
@@ -1952,6 +2003,7 @@
     },
     "/client/products/": {
       "get": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -1977,6 +2029,7 @@
     },
     "/client/products/{id}": {
       "get": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -2001,6 +2054,7 @@
     },
     "/client/products/slug/{slug}": {
       "get": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -2025,6 +2079,7 @@
     },
     "/client/products/getAll/{slug}": {
       "get": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -2057,8 +2112,41 @@
         }
       }
     },
+    "/client/products/getAllWithName/{name}": {
+      "get": {
+        "tags": ["Product"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/user/": {
       "get": {
+        "tags": ["User"],
         "description": "",
         "responses": {
           "200": {
@@ -2072,16 +2160,21 @@
     },
     "/user/logout": {
       "get": {
+        "tags": ["User"],
         "description": "",
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/user/{id}": {
       "get": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -2106,6 +2199,7 @@
     },
     "/user/edit/{id}": {
       "patch": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -2148,6 +2242,7 @@
     },
     "/user/register": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -2187,6 +2282,7 @@
     },
     "/user/login": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -2220,6 +2316,7 @@
     },
     "/user/password/forgot": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -2250,6 +2347,7 @@
     },
     "/user/password/otp": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -2286,6 +2384,7 @@
     },
     "/user/password/reset": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -2319,6 +2418,7 @@
     },
     "/user/change-pass/{userId}": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -2361,6 +2461,7 @@
     },
     "/user/refresh-token": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "responses": {
           "200": {
@@ -2377,6 +2478,7 @@
     },
     "/cart/{userId}": {
       "get": {
+        "tags": ["Cart"],
         "description": "",
         "parameters": [
           {
@@ -2401,6 +2503,7 @@
     },
     "/cart/add/{userId}": {
       "post": {
+        "tags": ["Cart"],
         "description": "",
         "parameters": [
           {
@@ -2437,6 +2540,7 @@
     },
     "/cart/delete/{userId}/{productId}": {
       "delete": {
+        "tags": ["Cart"],
         "description": "",
         "parameters": [
           {
@@ -2467,6 +2571,7 @@
     },
     "/cart/update/{userId}/{productId}/{quantity}": {
       "patch": {
+        "tags": ["Cart"],
         "description": "",
         "parameters": [
           {
@@ -2503,6 +2608,7 @@
     },
     "/like/{userId}": {
       "get": {
+        "tags": ["Like"],
         "description": "",
         "parameters": [
           {
@@ -2527,6 +2633,7 @@
     },
     "/like/add/{userId}": {
       "post": {
+        "tags": ["Like"],
         "description": "",
         "parameters": [
           {
@@ -2560,6 +2667,7 @@
     },
     "/like/delete/{userId}/{productId}": {
       "delete": {
+        "tags": ["Like"],
         "description": "",
         "parameters": [
           {
@@ -2590,6 +2698,7 @@
     },
     "/like/delete/{userId}": {
       "delete": {
+        "tags": ["Like"],
         "description": "",
         "parameters": [
           {
@@ -2614,6 +2723,7 @@
     },
     "/check-out/{userId}": {
       "get": {
+        "tags": ["Check-out"],
         "description": "",
         "parameters": [
           {
@@ -2638,6 +2748,7 @@
     },
     "/check-out/order/{userId}": {
       "post": {
+        "tags": ["Check-out"],
         "description": "",
         "parameters": [
           {
@@ -2689,6 +2800,7 @@
     },
     "/check-out/success/{orderId}": {
       "get": {
+        "tags": ["Check-out"],
         "description": "",
         "parameters": [
           {
@@ -2713,6 +2825,7 @@
     },
     "/address/{userId}": {
       "get": {
+        "tags": ["Address"],
         "description": "",
         "parameters": [
           {
@@ -2734,6 +2847,7 @@
     },
     "/address/getAddress/{addressId}": {
       "get": {
+        "tags": ["Address"],
         "description": "",
         "parameters": [
           {
@@ -2758,6 +2872,7 @@
     },
     "/address/add/{userId}": {
       "post": {
+        "tags": ["Address"],
         "description": "",
         "parameters": [
           {
@@ -2818,6 +2933,7 @@
     },
     "/address/edit/{addressId}": {
       "patch": {
+        "tags": ["Address"],
         "description": "",
         "parameters": [
           {
@@ -2881,6 +2997,7 @@
     },
     "/address/delete/{addressId}": {
       "delete": {
+        "tags": ["Address"],
         "description": "",
         "parameters": [
           {
@@ -2905,6 +3022,7 @@
     },
     "/order/": {
       "get": {
+        "tags": ["Order"],
         "description": "",
         "responses": {
           "200": {
@@ -2918,6 +3036,7 @@
     },
     "/order/{userId}": {
       "get": {
+        "tags": ["Order"],
         "description": "",
         "parameters": [
           {
@@ -2942,6 +3061,7 @@
     },
     "/order/detail/{orderId}": {
       "get": {
+        "tags": ["Order"],
         "description": "",
         "parameters": [
           {
