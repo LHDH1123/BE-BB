@@ -66,8 +66,11 @@ module.exports.checkoutPost = async (req, res) => {
           deleted: false,
         }).select("price discountPercentage stock");
 
-        if (!productInfo || productInfo.stock <= 0) return null;
+        if (item.quantity > productInfo.stock) {
+          return res.status(400).json({ message: "Hàng trong kho k đủ" });
+        }
 
+        if (!productInfo || productInfo.stock <= 0) return null;
         // Ép quantity không vượt quá stock
         const actualQuantity =
           item.quantity > productInfo.stock ? productInfo.stock : item.quantity;
@@ -151,6 +154,7 @@ module.exports.checkoutPost = async (req, res) => {
       orderId: order.id,
       orderDetails: validProductsOrder,
     });
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
