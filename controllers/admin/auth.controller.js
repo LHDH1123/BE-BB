@@ -44,7 +44,7 @@ module.exports.loginPost = async (req, res) => {
     }
 
     // Giả sử user.token đã có sẵn trong DB
-    res.cookie("token", user.token, {
+    res.cookie("tokenAdmin", user.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // true nếu deploy, false nếu local
       sameSite: "None",
