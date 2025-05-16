@@ -7,7 +7,7 @@ module.exports.requireAuth = async (req, res, next) => {
     //   next();
     // }
     // Lấy token từ cookie trước
-    let token = req.cookies.token;
+    let token = req.cookies.tokenADmin;
 
     // Nếu vẫn không có token, từ chối truy cập
     if (!token) {
