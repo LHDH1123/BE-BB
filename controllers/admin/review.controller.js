@@ -1,12 +1,47 @@
 const Review = require("../../models/review.model");
+const User = require("../../models/user.model");
+const Product = require("../../models/product.model");
 
 exports.index = async (req, res) => {
-  const interactions = await Review.find({});
+  try {
+    const interactions = await Review.find({})
+      .sort({ createdAt: -1 }) // mới nhất lên đầu
+      .lean();
 
-  res.json({
-    interactions,
-  });
+    const userIds = [...new Set(interactions.map((i) => i.user_id.toString()))];
+    const productIds = [
+      ...new Set(interactions.map((i) => i.product_id.toString())),
+    ];
+
+    const [users, products] = await Promise.all([
+      User.find({ _id: { $in: userIds } }).lean(),
+      Product.find({ _id: { $in: productIds } }).lean(),
+    ]);
+
+    const userMap = users.reduce((acc, u) => {
+      acc[u._id.toString()] = u.fullName;
+      return acc;
+    }, {});
+
+    const productMap = products.reduce((acc, p) => {
+      acc[p._id.toString()] = p.title;
+      return acc;
+    }, {});
+
+    const enrichedInteractions = interactions.map((review) => ({
+      ...review,
+      userName: userMap[review.user_id.toString()] || "Unknown user",
+      productName:
+        productMap[review.product_id.toString()] || "Unknown product",
+    }));
+
+    res.json({ interactions: enrichedInteractions });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
+
 // Like / Unlike
 exports.toggleLike = async (req, res) => {
   const { userId, productId } = req.params;

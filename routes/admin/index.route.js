@@ -9,7 +9,6 @@ const reviewRoutes = require("./review.route");
 const authMiddleware = require("../../middlewares/admin/auth.middlewares");
 
 module.exports = (app) => {
-
   app.use("/auth", authRoutes);
 
   app.use("/admin/brands", authMiddleware.requireAuth, brandRoutes);
@@ -18,12 +17,11 @@ module.exports = (app) => {
 
   app.use("/admin/products", authMiddleware.requireAuth, productRoutes);
 
-  app.use("/role", authMiddleware.requireAuth, roleRoutes);
+  app.use("/role", roleRoutes);
 
-  app.use("/accounts", authMiddleware.requireAuth, accountRoutes);
-  
+  app.use("/accounts", accountRoutes);
+
   app.use("/voucher", voucherRoutes);
 
   app.use("/review", reviewRoutes);
-
 };

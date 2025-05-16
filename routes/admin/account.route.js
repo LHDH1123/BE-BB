@@ -11,12 +11,7 @@ const upload = multer({
 });
 
 // 👇 Route list with permissions
-router.get(
-  "/",
-  auth.requireAuth,
-  auth.requirePermission("accounts_view"),
-  controller.index
-);
+router.get("/", controller.index);
 
 router.post(
   "/create",

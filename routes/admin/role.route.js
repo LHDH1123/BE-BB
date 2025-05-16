@@ -4,12 +4,7 @@ const controller = require("../../controllers/admin/role.controller");
 const auth = require("../../middlewares/admin/auth.middlewares"); // 👈 Import middleware
 
 // Lấy danh sách role
-router.get(
-  "/",
-  auth.requireAuth,
-  auth.requirePermission("roles_view"),
-  controller.index
-);
+router.get("/", controller.index);
 
 // Lấy role theo ID
 router.get("/:id", controller.getRole);
